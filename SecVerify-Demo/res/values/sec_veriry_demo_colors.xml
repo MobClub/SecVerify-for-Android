@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="sec_verify_demo_common_bg">#FFFFFF</color>
+	<color name="sec_verify_demo_text_color_common_black">#330F33</color>
+	<color name="sec_verify_demo_text_color_common_gray">#999999</color>
+	<color name="sec_verify_demo_text_color_common_gray_light">#CCCCCC</color>
+	<color name="sec_verify_demo_text_color_blue">#4E96FF</color>
+	<color name="sec_verify_demo_text_color_common_white">#EEEEEE</color>
+	<color name="sec_verify_demo_main_color">#FE7A4E</color>
+</resources>

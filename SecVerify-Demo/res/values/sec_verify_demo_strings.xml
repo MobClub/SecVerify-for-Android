@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="sec_verify_demo_text_title_bar_back"><![CDATA[<]]></string>
+
+	<string name="app_name">秒验</string>
+	<string name="sec_verify_demo_one_key_login">一键登录(无服务器版)</string>
+	<string name="sec_verify_demo_verify">一键验证</string>
+	<string name="sec_verify_demo_hint">开始秒验！</string>
+	<string name="sec_verify_demo_login">登录</string>
+	<string name="sec_verify_demo_customize_agreement_name_1">服务条款一</string>
+	<string name="sec_verify_demo_customize_agreement_name_2">服务条款二</string>
+
+	<!-- 认证成功页 -->
+	<string name="sec_verify_demo_success_complete">验证成功</string>
+	<string name="sec_verify_demo_success_hint">跳转到登录后的首页</string>
+	<string name="sec_verify_demo_success_one_more_try">再次体验</string>
+</resources>

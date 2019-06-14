@@ -1,0 +1,12 @@
+-ignorewarnings
+-keepattributes SourceFile,LineNumberTable,Exceptions,InnerClasses,EnclosingMethod,Signature,*Annotation*
+# for SecVerify
+-keep class com.mob.**{*;}
+# for CTCC
+-keep class cn.com.chinatelecom.account.api.**{*;}
+# for CUCC
+-keep class com.sdk.**{*;}
+# for CMCC
+-keep class com.cmic.sso.sdk.**{*;}
+# for demo
+-keep class * extends com.mob.secverify.demo.**{*;}

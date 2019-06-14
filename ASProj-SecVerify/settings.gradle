@@ -1,0 +1,4 @@
+//Demo
+include ':SecVerify-Demo'
+project(':SecVerify-Demo').projectDir = new File('../SecVerify-Demo')
+

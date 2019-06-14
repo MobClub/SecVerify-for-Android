@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="sec_verify_demo_text_size_xs">12sp</dimen>
+	<dimen name="sec_verify_demo_text_size_s">16sp</dimen>
+	<dimen name="sec_verify_demo_text_size_m">20sp</dimen>
+	<dimen name="sec_verify_demo_text_size_l">24sp</dimen>
+	<dimen name="sec_verify_demo_text_size_xl">28sp</dimen>
+
+	<dimen name="sec_verify_demo_height_title_bar">50dp</dimen>
+	<dimen name="sec_verify_demo_common_btn_height">50dp</dimen>
+	<dimen name="sec_verify_demo_common_edge_margin">20dp</dimen>
+</resources>

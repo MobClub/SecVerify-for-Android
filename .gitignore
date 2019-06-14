@@ -1,0 +1,15 @@
+
+ASProj-SecVerify/.gradle/
+ASProj-SecVerify/.idea/
+ASProj-SecVerify/build/
+ASProj-SecVerify/gradle/
+ASProj-SecVerify/ASProj-SecVerify.iml
+ASProj-SecVerify/local.properties
+ASProj-SecVerify/gradle.properties
+ASProj-SecVerify/gradlew.bat
+ASProj-SecVerify/gradlew
+
+SecVerify-Demo/build/
+SecVerify-Demo/SecVerify-Demo.iml
+
+
