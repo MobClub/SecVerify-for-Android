@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.mob.sdk'
 
 android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
+    
     defaultConfig {
         applicationId "com.mob.secverify.demo"
         minSdkVersion 16
@@ -11,10 +14,19 @@ android {
         versionName "1.0.0"
         ndk {
             // 选择要添加的对应 cpu 类型的 .so 库。
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            abiFilters 'armeabi-v7a'
             // 可指定的值为 'armeabi-v7a', 'arm64-v8a', 'armeabi', 'x86', 'x86_64'
         }
     }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+
 }
 
 // 在MobSDK的扩展中注册SMSSDK的相关信息
