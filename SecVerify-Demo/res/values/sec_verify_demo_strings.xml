@@ -5,7 +5,7 @@
 	<string name="app_name">秒验</string>
 	<string name="sec_verify_demo_one_key_login">一键登录(无服务器版)</string>
 	<string name="sec_verify_demo_verify">一键验证</string>
-	<string name="sec_verify_demo_hint">开始秒验！</string>
+	<string name="sec_verify_demo_hint">开始验证！</string>
 	<string name="sec_verify_demo_login">登录</string>
 	<string name="sec_verify_demo_customize_agreement_name_1">服务条款一</string>
 	<string name="sec_verify_demo_customize_agreement_name_2">服务条款二</string>
