@@ -23,6 +23,7 @@ import com.mob.secverify.demo.exception.DemoException;
 import com.mob.secverify.demo.login.LoginTask;
 import com.mob.secverify.demo.ui.component.CommonProgressDialog;
 import com.mob.secverify.demo.util.Const;
+import com.mob.secverify.exception.VerifyErr;
 import com.mob.secverify.exception.VerifyException;
 import com.mob.secverify.ui.component.VerifyCommonButton;
 
@@ -37,6 +38,7 @@ public class MainActivity extends BaseActivity {
 	private VerifyCommonButton oneKeyLoginBtn;
 	private VerifyCommonButton verifyBtn;
 	private TextView versionTv;
+	private boolean devMode = false;
 
 	@Override
 	protected int getContentViewId() {
@@ -63,6 +65,10 @@ public class MainActivity extends BaseActivity {
 		switch (id) {
 			case R.id.sec_verify_demo_main_verify: {
 				verify();
+				break;
+			}
+			case R.id.sec_verify_demo_main_version: {
+				switchDevMode();
 				break;
 			}
 		}
@@ -92,6 +98,7 @@ public class MainActivity extends BaseActivity {
 		logoIv.setImageResource(R.drawable.sec_verify_demo_tradition);
 		oneKeyLoginBtn.setOnClickListener(this);
 		verifyBtn.setOnClickListener(this);
+		versionTv.setOnClickListener(this);
 	}
 
 	/* 检查使用权限 */
@@ -144,15 +151,18 @@ public class MainActivity extends BaseActivity {
 	private void verify() {
 		customizeUi();
 
+		CommonProgressDialog.showProgressDialog(this);
 		SecVerify.verify(new VerifyCallback() {
 			@Override
 			public void onOtherLogin() {
 				// 用户点击“其他登录方式”，处理自己的逻辑
+				CommonProgressDialog.dismissProgressDialog();
 				Toast.makeText(MainActivity.this, "其他账号登录", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onComplete(VerifyResult data) {
+				CommonProgressDialog.dismissProgressDialog();
 				if (data != null) {
 					Log.d(TAG, data.toJSONString());
 					// 获取授权码成功，将token信息传给应用服务端，再由应用服务端进行登录验证，此功能需由开发者自行实现
@@ -183,9 +193,12 @@ public class MainActivity extends BaseActivity {
 								errDetail = t.getMessage();
 							}
 
-							String msg = "获取授权码成功，应用服务器登录失败" + "\n错误信息: " + errMsg;
+							String msg = "获取授权码成功，应用服务器登录失败" + "\n错误码: " + errCode + "\n错误信息: " + errMsg;
 							if (!TextUtils.isEmpty(errDetail)) {
 								msg += "\n详细信息: " + errDetail;
+							}
+							if (!devMode) {
+								msg = "当前网络异常";
 							}
 							Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
 						}
@@ -196,6 +209,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onFailure(VerifyException e) {
 				// 登录失败
+				CommonProgressDialog.dismissProgressDialog();
 				Log.e(TAG, "verify failed", e);
 				// 错误码
 				int errCode = e.getCode();
@@ -208,9 +222,17 @@ public class MainActivity extends BaseActivity {
 					errDetail = t.getMessage();
 				}
 
-				String msg = "错误信息: " + errMsg;
+				String msg = "错误码: " + errCode + "\n错误信息: " + errMsg;
 				if (!TextUtils.isEmpty(errDetail)) {
 					msg += "\n详细信息: " + errDetail;
+				}
+				// 用户取消授权
+				if (errCode == VerifyErr.C_ONE_KEY_USER_CANCEL_GRANT.getCode()) {
+					msg = errMsg;
+				} else {
+					if (!devMode) {
+						msg = "当前网络异常";
+					}
 				}
 				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
 			}
@@ -289,6 +311,16 @@ public class MainActivity extends BaseActivity {
 			} else {
 				vibrator.vibrate(500);
 			}
+		}
+	}
+
+	private void switchDevMode() {
+		if (devMode) {
+			devMode = false;
+			Toast.makeText(this, "开发者模式：Off", Toast.LENGTH_SHORT).show();
+		} else {
+			devMode = true;
+			Toast.makeText(this, "开发者模式：On", Toast.LENGTH_SHORT).show();
 		}
 	}
 }
