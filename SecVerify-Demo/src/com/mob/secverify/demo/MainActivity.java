@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity {
 		initView();
 		checkPermissions();
 		// 建议提早调用该接口进行预登录，这将极大地加快验证流程
-		preVerify(true);
+		preVerify();
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUEST_CODE) {
 			// Demo为了演示效果，从验证成功页面返回时可以重复验证，因此在onActivityResult中再次做预登录
-			preVerify(false);
+			preVerify();
 		}
 	}
 
@@ -124,20 +124,16 @@ public class MainActivity extends BaseActivity {
 	 *
 	 * 建议提前调用预登录接口，可以加快免密登录过程，提高用户体验
 	 */
-	private void preVerify(final boolean init) {
+	private void preVerify() {
 		SecVerify.preVerify(new OperationCallback() {
 			@Override
 			public void onComplete(Object data) {
 				// Nothing to do
-				Toast.makeText(MainActivity.this, "预登录成功", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onFailure(VerifyException e) {
 				// Nothing to do
-				if (!init) {
-					Toast.makeText(MainActivity.this, "预登录失败", Toast.LENGTH_SHORT).show();
-				}
 			}
 		});
 	}
@@ -161,9 +157,9 @@ public class MainActivity extends BaseActivity {
 					Log.d(TAG, data.toJSONString());
 					// 获取授权码成功，将token信息传给应用服务端，再由应用服务端进行登录验证，此功能需由开发者自行实现
 					CommonProgressDialog.showProgressDialog(MainActivity.this);
-					LoginTask.getInstance().login(data, new ResultListener<com.mob.secverify.demo.entity.LoginResult>() {
+					LoginTask.getInstance().login(data, new ResultListener<LoginResult>() {
 						@Override
-						public void onComplete(com.mob.secverify.demo.entity.LoginResult data) {
+						public void onComplete(LoginResult data) {
 							CommonProgressDialog.dismissProgressDialog();
 							Log.d(TAG, "Login success. data: " + data.toJSONString());
 							vibrate();
@@ -287,7 +283,7 @@ public class MainActivity extends BaseActivity {
 	private void vibrate() {
 		Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		if (vibrator != null) {
-			if (android.os.Build.VERSION.SDK_INT >= 26) {
+			if (Build.VERSION.SDK_INT >= 26) {
 				VibrationEffect vibrationEffect = VibrationEffect.createOneShot(500, 20);
 				vibrator.vibrate(vibrationEffect);
 			} else {
