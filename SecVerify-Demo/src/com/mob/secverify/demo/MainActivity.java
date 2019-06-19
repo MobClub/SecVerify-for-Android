@@ -167,9 +167,9 @@ public class MainActivity extends BaseActivity {
 					Log.d(TAG, data.toJSONString());
 					// 获取授权码成功，将token信息传给应用服务端，再由应用服务端进行登录验证，此功能需由开发者自行实现
 					CommonProgressDialog.showProgressDialog(MainActivity.this);
-					LoginTask.getInstance().login(data, new ResultListener<LoginResult>() {
+					LoginTask.getInstance().login(data, new ResultListener<com.mob.secverify.demo.entity.LoginResult>() {
 						@Override
-						public void onComplete(LoginResult data) {
+						public void onComplete(com.mob.secverify.demo.entity.LoginResult data) {
 							CommonProgressDialog.dismissProgressDialog();
 							Log.d(TAG, "Login success. data: " + data.toJSONString());
 							vibrate();
@@ -226,12 +226,13 @@ public class MainActivity extends BaseActivity {
 				if (!TextUtils.isEmpty(errDetail)) {
 					msg += "\n详细信息: " + errDetail;
 				}
-				// 用户取消授权
-				if (errCode == VerifyErr.C_ONE_KEY_USER_CANCEL_GRANT.getCode()) {
-					msg = errMsg;
-				} else {
-					if (!devMode) {
-						msg = "当前网络异常";
+				if (!devMode) {
+					msg = "当前网络异常";
+					if (errCode == VerifyErr.C_ONE_KEY_USER_CANCEL_GRANT.getCode()
+					|| errCode == VerifyErr.C_LACK_OF_PERMISSIONS.getCode()
+					|| errCode == VerifyErr.C_NO_SIM.getCode()
+					|| errCode == VerifyErr.C_UNSUPPORTED_OPERATOR.getCode()) {
+						msg = errMsg;
 					}
 				}
 				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
@@ -305,7 +306,7 @@ public class MainActivity extends BaseActivity {
 	private void vibrate() {
 		Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		if (vibrator != null) {
-			if (Build.VERSION.SDK_INT >= 26) {
+			if (android.os.Build.VERSION.SDK_INT >= 26) {
 				VibrationEffect vibrationEffect = VibrationEffect.createOneShot(500, 20);
 				vibrator.vibrate(vibrationEffect);
 			} else {
