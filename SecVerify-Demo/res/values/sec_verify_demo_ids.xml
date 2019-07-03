@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<item name="customized_view_id" type="id" />
+	<item name="customized_btn_id_1" type="id" />
+	<item name="customized_btn_id_2" type="id" />
+</resources>

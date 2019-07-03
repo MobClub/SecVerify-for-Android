@@ -24,6 +24,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="20dp"
+		android:layout_marginBottom="20dp"
 		android:textSize="@dimen/sec_verify_demo_text_size_l"
 		android:textColor="@color/sec_verify_demo_text_color_common_black"
 		android:text="@string/sec_verify_demo_hint"/>
@@ -41,7 +42,6 @@
 			android:id="@+id/sec_verify_demo_main_verify"
 			android:layout_width="match_parent"
 			android:layout_height="@dimen/sec_verify_demo_common_btn_height"
-			android:layout_marginTop="50dp"
 			app:vcombtn_text="@string/sec_verify_demo_verify"/>
 	</LinearLayout>
 	<TextView
