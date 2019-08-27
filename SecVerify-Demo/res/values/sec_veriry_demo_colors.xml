@@ -7,4 +7,5 @@
 	<color name="sec_verify_demo_text_color_blue">#4E96FF</color>
 	<color name="sec_verify_demo_text_color_common_white">#EEEEEE</color>
 	<color name="sec_verify_demo_main_color">#FE7A4E</color>
+	<color name="sec_verify_demo_common_bg_transparent">#00FE7A4E</color>
 </resources>
