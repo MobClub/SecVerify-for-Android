@@ -1,9 +1,11 @@
 -ignorewarnings
 -keepattributes SourceFile,LineNumberTable,Exceptions,InnerClasses,EnclosingMethod,Signature,*Annotation*
 # for SecVerify
+-keep class android.webkit.**{*;}
+
 -keep class com.mob.**{*;}
 # for CTCC
--keep class cn.com.chinatelecom.account.api.**{*;}
+-keep class cn.com.chinatelecom.account.**{*;}
 # for CUCC
 -keep class com.sdk.**{*;}
 # for CMCC

@@ -14,4 +14,14 @@
 	<string name="sec_verify_demo_success_complete">验证成功</string>
 	<string name="sec_verify_demo_success_hint">跳转到登录后的首页</string>
 	<string name="sec_verify_demo_success_one_more_try">再次体验</string>
+
+	<string name="sec_verify_demo_other_login">其他登录</string>
+
+	<string name="sec_verify_demo_agreement_text_cmcc">《中国移动认证服务条款》</string>
+	<string name="sec_verify_demo_agreement_text_cucc">《中国联通认证服务条款》</string>
+	<string name="sec_verify_demo_agreement_text_ctcc">《中国电信认证服务条款》</string>
+	<string name="sec_verify_demo_agreement_text_start">同意</string>
+	<string name="sec_verify_demo_agreement_text_and1">及</string>
+	<string name="sec_verify_demo_agreement_text_and2">和</string>
+	<string name="sec_verify_demo_agreement_text_end">并授权秒验使用本机号码登录</string>
 </resources>
