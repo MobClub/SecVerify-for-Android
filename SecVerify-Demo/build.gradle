@@ -9,13 +9,13 @@ android {
         applicationId "com.mob.secverify.demo"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 20004
-        versionName "2.0.3"
-//        ndk {
-//            // 选择要添加的对应 cpu 类型的 .so 库。
-//            abiFilters 'armeabi-v7a'
-//            // 可指定的值为 'armeabi-v7a', 'arm64-v8a', 'armeabi', 'x86', 'x86_64'
-//        }
+        versionCode 20005
+        versionName "2.0.4"
+        ndk {
+            // 选择要添加的对应 cpu 类型的 .so 库。
+            abiFilters 'armeabi-v7a'
+            // 可指定的值为 'armeabi-v7a', 'arm64-v8a', 'armeabi', 'x86', 'x86_64'
+        }
     }
 
     sourceSets {
@@ -25,32 +25,9 @@ android {
             res.srcDirs = ['res']
         }
     }
-    signingConfigs {
-        release {
-            storeFile file("../ASProj-SecVerify/private.keystore")
-            storePassword "mob123"
-            keyAlias "private.keystore"
-            keyPassword "mob123"
-        }
-        debug {
-            storeFile file("../ASProj-SecVerify/private.keystore")
-            storePassword "mob123"
-            keyAlias "private.keystore"
-            keyPassword "mob123"
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
-            signingConfig signingConfigs.release
-        }
-        debug {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
-            signingConfig signingConfigs.debug
-        }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 }
 
@@ -60,12 +37,11 @@ MobSDK {
     appSecret 'b89d2427a3bc7ad1aea1e1e8c1d36bf3'
 
     SecVerify {
+        version '2.0.4'
     }
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
     implementation 'com.squareup.leakcanary:leakcanary-android:1.5.4' // DELETE MARK

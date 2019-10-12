@@ -4,9 +4,6 @@ buildscript {
     repositories {
         jcenter()
         google()
-//        maven {
-//            url "http://10.18.97.47:8080/jenkins/job/iMaven/ws/android"
-//        }
         configurations.all {
             resolutionStrategy.cacheDynamicVersionsFor 1,'seconds'
         }

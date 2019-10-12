@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mob.secverify.datatype.LandUiSettings;
 import com.mob.secverify.datatype.UiSettings;
 import com.mob.secverify.demo.R;
 import com.mob.tools.utils.ResHelper;
@@ -108,7 +109,7 @@ public class CustomizeUtils {
 //				.setCusAgreementNameId2(R.string.sec_verify_demo_customize_agreement_name_2)
 //				// 自定义隐私协议二URL
 //				.setCusAgreementUrl2("https://www.jianshu.com")
-				//自定义隐私协议二颜色
+////				自定义隐私协议二颜色
 //                .setCusAgreementColor2(R.color.sec_verify_demo_main_color)
 				//隐私协议是否左对齐，默认居中
 				.setAgreementGravityLeft(false)
@@ -138,7 +139,9 @@ public class CustomizeUtils {
 				//设置状态栏文字颜色为黑色，只在6.0以上生效
 				.setImmersiveStatusTextColorBlack(false)
 				//使用平移动画
-				.setTranslateAnim(true)
+//				.setTranslateAnim(true)
+				.setStartActivityTransitionAnim(R.anim.translate_in,R.anim.translate_out)
+				.setFinishActivityTransitionAnim(R.anim.translate_in,R.anim.translate_out)
 				//设置隐私协议文字起始
 				.setAgreementTextStart(R.string.sec_verify_demo_agreement_text_start)
 				//设置隐私协议文字连接
@@ -304,7 +307,9 @@ public class CustomizeUtils {
 				.setImmersiveTheme(true)
 				//设置状态栏文字颜色为黑色，只在6.0以上生效
 				.setImmersiveStatusTextColorBlack(true)
-				.setZoomAnim(true)
+//				.setZoomAnim(true)
+				.setStartActivityTransitionAnim(R.anim.zoom_in,R.anim.zoom_out)
+				.setFinishActivityTransitionAnim(R.anim.zoom_in,R.anim.zoom_out)
 				.setBackgroundClickClose(true)
 				.build();
 	}
@@ -325,15 +330,16 @@ public class CustomizeUtils {
 				.setAgreementAlignParentRight(false)
 				.setLoginBtnAlignParentRight(true)
 				.setSloganAlignParentRight(true)
-				.setBackgroundClickClose(true)
+				.setBackgroundClickClose(false)
 				.setImmersiveTheme(false)
 				//设置状态栏文字颜色为黑色，只在6.0以上生效
 				.setImmersiveStatusTextColorBlack(false)
 				.setDialogMaskBackgroundClickClose(true)
-				.setStartActivityTransitionAnim(R.anim.translate_bottom_in, R.anim.translate_bottom_out)
-				.setFinishActivityTransitionAnim(R.anim.translate_bottom_in, R.anim.translate_bottom_out)
+				.setStartActivityTransitionAnim(R.anim.translate_bottom_in,R.anim.translate_bottom_out)
+				.setFinishActivityTransitionAnim(R.anim.translate_bottom_in,R.anim.translate_bottom_out)
 				.setDialogTheme(true)
 				.setDialogAlignBottom(true)
+				.setBottomTranslateAnim(true)
 				.build();
 	}
 
@@ -353,7 +359,8 @@ public class CustomizeUtils {
 		return new UiSettings.Builder()
 				.setNavCloseImgOffsetRightX(R.dimen.sec_verify_demo_nav_close_img_offset_right_x_customize)
 				.setDialogMaskBackgroundClickClose(true)
-				.setFadeAnim(true)
+				.setStartActivityTransitionAnim(R.anim.fade_in,R.anim.fade_out)
+				.setFinishActivityTransitionAnim(R.anim.fade_in,R.anim.fade_out)
 				.setBackgroundImgId(R.drawable.sec_verify_background_demo_dialog)
 				.setDialogTheme(true)
 				.setDialogAlignBottom(false)
@@ -362,6 +369,125 @@ public class CustomizeUtils {
 				.setDialogOffsetX(R.dimen.sec_verify_demo_dialog_offset_x)
 				.setDialogOffsetY(R.dimen.sec_verify_demo_dialog_offset_y)
 				.build();
+	}
+
+	public static LandUiSettings customizeUi5(Context context){
+		return new LandUiSettings.Builder()
+				.setNavColorId(0xffffffff)
+				.setNavTextId("一键登录")
+				.setNavTextColorId(0xff000000)
+				.setNavCloseImgId(context.getResources().getDrawable(R.drawable.sec_verify_demo_close))
+				.setNavHidden(false)
+				.setNavTransparent( true)
+				.setNavCloseImgHidden( false)
+				.setNavTextSize(16)
+				.setNavCloseImgWidth(30)
+				.setNavCloseImgHeight(30)
+				.setNavCloseImgOffsetX( 15)
+//				.setNavCloseImgOffsetRightX( 30)
+				.setNavCloseImgOffsetY(15)
+
+				.setLogoImgId(context.getResources().getDrawable(R.drawable.sec_verify_page_one_key_login_logo))
+				.setLogoWidth( 80)
+				.setLogoHeight( 80)
+				.setLogoOffsetX( 150)
+				.setLogoOffsetY( 30)
+				.setLogoHidden( false)
+//				.setLogoOffsetBottomY( 130)
+				.setLogoOffsetRightX( 15)
+				.setLogoAlignParentRight( false)
+
+				.setNumberColorId(0xff000000)
+				.setNumberSizeId(20)
+				.setNumberOffsetX( 30)
+				.setNumberOffsetY( 40)
+				.setNumberHidden( false)
+//				.setNumberOffsetBottomY( 110)
+				.setNumberOffsetRightX( 150)
+				.setNumberAlignParentRight( true)
+
+				.setSwitchAccColorId(0xff4e96ff)
+				.setSwitchAccTextSize(16)
+				.setSwitchAccHidden(false)
+				.setSwitchAccOffsetX(15)
+				.setSwitchAccOffsetY(85)
+				.setSwitchAccText( "其他方式登录")
+//				.setSwitchAccOffsetBottomY( 90)
+				.setSwitchAccOffsetRightX( 160)
+				.setSwitchAccAlignParentRight( true)
+
+				.setCheckboxImgId(context.getResources().getDrawable(R.drawable.customized_checkbox_selector))
+				.setCheckboxDefaultState(false)
+				.setCheckboxHidden( false)
+
+				.setAgreementColorId(0xfffe7a4e)
+				.setAgreementOffsetX( 50)
+				.setAgreementOffsetRightX( 50)
+				.setAgreementOffsetY( 210)
+//				.setAgreementOffsetBottomY( 15)
+				.setAgreementGravityLeft( false)
+				.setAgreementBaseTextColorId(0xff000000)
+				.setAgreementTextSize( 15)
+				.setAgreementCmccText( "《中国移动服务条款》")
+				.setAgreementCuccText( "《中国联通服务条款》")
+				.setAgreementCtccText( "《中国电信服务条款》")
+				.setAgreementTextStart( "同意")
+				.setAgreementTextAnd1( "和")
+				.setAgreementTextAnd2( "、")
+				.setAgreementTextEnd( "并使用本机号登录")
+				.setAgreementHidden( false)
+				.setAgreementAlignParentRight( false)
+
+				.setCusAgreementNameId1( "隐私服务协议一")
+				.setCusAgreementUrl1("http://baidu.com")
+				.setCusAgreementNameId2( "隐私服务协议二")
+				.setCusAgreementUrl2("http://baidu.com")
+				.setCusAgreementColor1(0xfffe7a4e)
+				.setCusAgreementColor2(0xfffe7a4e)
+
+				.setLoginBtnImgId(context.getResources().getDrawable(R.drawable.sec_verify_demo_shape_rectangle))
+				.setLoginBtnTextId( "登录")
+				.setLoginBtnTextColorId( 0xffffffff)
+				.setLoginBtnTextSize( 16)
+				.setLoginBtnWidth( 200)
+				.setLoginBtnHeight(40)
+//				.setLoginBtnOffsetX( 15)
+				.setLoginBtnOffsetY( 150)
+//				.setLoginBtnOffsetRightX( 15)
+//				.setLoginBtnAlignParentRight( false)
+//				.setLoginBtnOffsetBottomY( 40)
+				.setLoginBtnHidden( false)
+
+				.setBackgroundImgId(context.getResources().getDrawable(R.color.sec_verify_demo_common_bg))
+				.setBackgroundClickClose( false)
+
+				.setSloganOffsetRightX( 15)
+				.setSloganAlignParentRight( true)
+				.setSloganOffsetX( 15)
+				.setSloganOffsetY( 200)
+				.setSloganOffsetBottomY(15)
+				.setSloganTextSize( 16)
+				.setSloganTextColor(0xffFF6347)
+				.setSloganHidden( false)
+				.setStartActivityTransitionAnim(ResHelper.getAnimRes(context,"zoom_in"),ResHelper.getAnimRes(context,"zoom_out"))
+				.setFinishActivityTransitionAnim(ResHelper.getAnimRes(context,"zoom_in"),ResHelper.getAnimRes(context,"zoom_out"))
+				.setImmersiveTheme( false)
+				.setImmersiveStatusTextColorBlack( true)
+
+//				.setDialogTheme( true)
+//				.setDialogAlignBottom( false)
+//				.setDialogOffsetX( 80)
+//				.setDialogOffsetY( 80)
+//				.setDialogWidth( 400)
+//				.setDialogHeight( 400)
+//				.setDialogMaskBackground(context.getResources().getDrawable(R.drawable.sec_verify_demo_common_progress_dialog_bg))
+//				.setDialogMaskBackgroundClickClose( true)
+
+//				.setTranslateAnim( true)
+//				.setZoomAnim( true)
+//				.setFadeAnim( true)
+				.build();
+
 	}
 
 	public static List<View> buildCustomView(Context context){

@@ -2,6 +2,7 @@ package com.mob.secverify.demo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 
 import pl.droidsonroids.gif.GifImageView;
 
+
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_CODE = 1001;
@@ -61,7 +63,6 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	protected void onViewCreated() {
-//		NetWorkUtil.getNetState(MainActivity.this, NetWorkUtil.NET_CELLULAR);
 		if (Build.VERSION.SDK_INT >= 21){
 			// 设置沉浸式状态栏
 			View decorView = getWindow().getDecorView();
@@ -90,7 +91,29 @@ public class MainActivity extends BaseActivity {
 		int id = v.getId();
 		switch (id) {
 			case R.id.sec_verify_demo_main_verify: {
-				verify();
+				// 添加自定义控件
+				// 自定义UI
+				if (defaultUi == 0) {
+					addCustomView();
+					customizeUi();
+					verify();
+				} else if (defaultUi == 1) {
+					customizeUi1();
+					SecVerify.autoFinishOAuthPage(false);
+					SecVerify.otherLoginAutoFinishOAuthPage(false);
+					verify();
+				} else if (defaultUi == 2) {
+					addCustomView1();
+					customizeUi2();
+					SecVerify.autoFinishOAuthPage(true);
+					SecVerify.otherLoginAutoFinishOAuthPage(true);
+					verifyWithLambda();
+				} else if (defaultUi == 3) {
+					addCustomView4();
+					customizeUi4();
+					verifyWithLambda();
+				}
+
 				break;
 			}
 			case R.id.sec_verify_demo_main_version: {
@@ -170,6 +193,10 @@ public class MainActivity extends BaseActivity {
 	 * 建议提前调用预登录接口，可以加快免密登录过程，提高用户体验
 	 */
 	private void preVerify() {
+//		SecVerify.preVerify( cb -> {
+//			cb.onFailure(e ->{ });
+//			cb.onComplete( o -> { } );
+//		});
 		SecVerify.preVerify(new OperationCallback() {
 			@Override
 			public void onComplete(Object data) {
@@ -211,30 +238,14 @@ public class MainActivity extends BaseActivity {
 	 * 免密登录
 	 */
 	private void verify() {
-		// 添加自定义控件
-		// 自定义UI
-		if (defaultUi == 0) {
-			addCustomView();
-			customizeUi();
-			SecVerify.autoFinishOAuthPage(true);
-		} else if (defaultUi == 1) {
-			customizeUi1();
-			SecVerify.autoFinishOAuthPage(false);
-		} else if (defaultUi == 2) {
-			addCustomView1();
-			customizeUi2();
-			SecVerify.autoFinishOAuthPage(true);
-		} else if (defaultUi == 3) {
-			addCustomView4();
-			customizeUi4();
-			SecVerify.autoFinishOAuthPage(true);
-		}
-
-
 		CommonProgressDialog.showProgressDialog(this);
 		SecVerify.verify(new VerifyCallback() {
 			@Override
 			public void onOtherLogin() {
+				if (defaultUi == 1){
+					//成功之后不会自动关闭授权页面，需要手动关闭
+					SecVerify.finishOAuthPage();
+				}
 				// 用户点击“其他登录方式”，处理自己的逻辑
 				CommonProgressDialog.dismissProgressDialog();
 				Toast.makeText(MainActivity.this, "其他方式登录", Toast.LENGTH_SHORT).show();
@@ -249,93 +260,116 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onComplete(VerifyResult data) {
-				if (defaultUi == 1){
-					//成功之后不会自动关闭授权页面，需要手动关闭
-					SecVerify.finishOAuthPage();
-				}
-				CommonProgressDialog.dismissProgressDialog();
-				if (data != null) {
-					Log.d(TAG, data.toJSONString());
-					// 获取授权码成功，将token信息传给应用服务端，再由应用服务端进行登录验证，此功能需由开发者自行实现
-					CommonProgressDialog.showProgressDialog(MainActivity.this);
-					LoginTask.getInstance().login(data, new ResultListener<com.mob.secverify.demo.entity.LoginResult>() {
-						@Override
-						public void onComplete(com.mob.secverify.demo.entity.LoginResult data) {
-							CommonProgressDialog.dismissProgressDialog();
-							Log.d(TAG, "Login success. data: " + data.toJSONString());
-							vibrate();
-							// 服务端登录成功，跳转成功页
-							gotoSuccessActivity(data);
-						}
-
-						@Override
-						public void onFailure(DemoException e) {
-							// 登录失败
-							Log.e(TAG, "login failed", e);
-							CommonProgressDialog.dismissProgressDialog();
-							// 错误码
-							int errCode = e.getCode();
-							// 错误信息
-							String errMsg = e.getMessage();
-							// 更详细的网络错误信息可以通过t查看，请注意：t有可能为null
-							Throwable t = e.getCause();
-							String errDetail = null;
-							if (t != null) {
-								errDetail = t.getMessage();
-							}
-
-							String msg = "获取授权码成功，应用服务器登录失败" + "\n错误码: " + errCode + "\n错误信息: " + errMsg;
-							if (!TextUtils.isEmpty(errDetail)) {
-								msg += "\n详细信息: " + errDetail;
-							}
-							if (!devMode) {
-								msg = "当前网络不稳定";
-							}
-							Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-
-							// Demo为了演示效果，登录失败时也做一次预登录
-							preVerify();
-						}
-					});
-				}
+				verifySuccess(data);
 			}
 
 			@Override
 			public void onFailure(VerifyException e) {
-				// 登录失败
-				if (defaultUi == 1){
-					//失败之后不会自动关闭授权页面，需要手动关闭
-					SecVerify.finishOAuthPage();
-				}
-				CommonProgressDialog.dismissProgressDialog();
-				Log.e(TAG, "verify failed", e);
-				// 错误码
-				int errCode = e.getCode();
-				// 错误信息
-				String errMsg = e.getMessage();
-				// 更详细的网络错误信息可以通过t查看，请注意：t有可能为null
-				Throwable t = e.getCause();
-				String errDetail = null;
-				if (t != null) {
-					errDetail = t.getMessage();
-				}
-
-				String msg = "错误码: " + errCode + "\n错误信息: " + errMsg;
-				if (!TextUtils.isEmpty(errDetail)) {
-					msg += "\n详细信息: " + errDetail;
-				}
-				if (!devMode) {
-					msg = "当前网络不稳定";
-					if (errCode == VerifyErr.C_LACK_OF_PERMISSIONS.getCode()
-							|| errCode == VerifyErr.C_NO_SIM.getCode()
-							|| errCode == VerifyErr.C_UNSUPPORTED_OPERATOR.getCode()
-							|| errCode == VerifyErr.C_CELLULAR_DISABLED.getCode()) {
-						msg = errMsg;
-					}
-				}
-				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+				verifyFailure(e);
 			}
 		});
+	}
+
+	private void verifyWithLambda(){
+		CommonProgressDialog.showProgressDialog(this);
+		SecVerify.verify(cb -> {
+			cb.onOtherLogin(() -> {
+				CommonProgressDialog.dismissProgressDialog();
+				Toast.makeText(MainActivity.this, "其他方式登录", Toast.LENGTH_SHORT).show();
+			});
+			cb.onCancel(() -> {CommonProgressDialog.dismissProgressDialog();Toast.makeText(MainActivity.this, "用户取消登录", Toast.LENGTH_SHORT).show();});
+			cb.onComplete(this::verifySuccess);
+			cb.onFailure(this::verifyFailure);
+
+		});
+	}
+
+	private void verifyFailure(VerifyException e) {
+		// 登录失败
+		if (defaultUi == 1){
+			//失败之后不会自动关闭授权页面，需要手动关闭
+			SecVerify.finishOAuthPage();
+		}
+		CommonProgressDialog.dismissProgressDialog();
+		Log.e(TAG, "verify failed", e);
+		// 错误码
+		int errCode = e.getCode();
+		// 错误信息
+		String errMsg = e.getMessage();
+		// 更详细的网络错误信息可以通过t查看，请注意：t有可能为null
+		Throwable t = e.getCause();
+		String errDetail = null;
+		if (t != null) {
+			errDetail = t.getMessage();
+		}
+
+		String msg = "错误码: " + errCode + "\n错误信息: " + errMsg;
+		if (!TextUtils.isEmpty(errDetail)) {
+			msg += "\n详细信息: " + errDetail;
+		}
+		if (!devMode) {
+			msg = "当前网络不稳定";
+			if (errCode == VerifyErr.C_LACK_OF_PERMISSIONS.getCode()
+					|| errCode == VerifyErr.C_NO_SIM.getCode()
+					|| errCode == VerifyErr.C_UNSUPPORTED_OPERATOR.getCode()
+					|| errCode == VerifyErr.C_CELLULAR_DISABLED.getCode()) {
+				msg = errMsg;
+			}
+		}
+		Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+	}
+
+	private void verifySuccess(VerifyResult data) {
+		if (defaultUi == 1){
+			//成功之后不会自动关闭授权页面，需要手动关闭
+			SecVerify.finishOAuthPage();
+		}
+		CommonProgressDialog.dismissProgressDialog();
+		if (data != null) {
+			Log.d(TAG, data.toJSONString());
+			// 获取授权码成功，将token信息传给应用服务端，再由应用服务端进行登录验证，此功能需由开发者自行实现
+			CommonProgressDialog.showProgressDialog(MainActivity.this);
+			LoginTask.getInstance().login(data, new ResultListener<com.mob.secverify.demo.entity.LoginResult>() {
+				@Override
+				public void onComplete(com.mob.secverify.demo.entity.LoginResult data) {
+					CommonProgressDialog.dismissProgressDialog();
+					Log.d(TAG, "Login success. data: " + data.toJSONString());
+					vibrate();
+					// 服务端登录成功，跳转成功页
+					gotoSuccessActivity(data);
+				}
+
+				@Override
+				public void onFailure(DemoException e) {
+					// 登录失败
+					Log.e(TAG, "login failed", e);
+					CommonProgressDialog.dismissProgressDialog();
+					// 错误码
+					int errCode = e.getCode();
+					// 错误信息
+					String errMsg = e.getMessage();
+					// 更详细的网络错误信息可以通过t查看，请注意：t有可能为null
+					Throwable t = e.getCause();
+					String errDetail = null;
+					if (t != null) {
+						errDetail = t.getMessage();
+					}
+
+					String msg = "获取授权码成功，应用服务器登录失败" + "\n错误码: " + errCode + "\n错误信息: " + errMsg;
+					if (!TextUtils.isEmpty(errDetail)) {
+						msg += "\n详细信息: " + errDetail;
+					}
+					if (!devMode) {
+						msg = "当前网络不稳定";
+					}
+					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+					// Demo为了演示效果，登录失败时也做一次预登录
+					preVerify();
+				}
+			});
+		}
+
 	}
 
 	private void customizeUi() {
@@ -346,12 +380,7 @@ public class MainActivity extends BaseActivity {
 
 	private void customizeUi1() {
 		SecVerify.setUiSettings(CustomizeUtils.customizeUi1());
-		LandUiSettings uiSettings1  = new LandUiSettings.Builder()
-				.setTranslateAnim(true)
-				.setImmersiveTheme(true)
-				.setImmersiveStatusTextColorBlack(true)
-				.build();
-		SecVerify.setLandUiSettings(uiSettings1);
+		SecVerify.setLandUiSettings(CustomizeUtils.customizeUi5(this));
 	}
 
 
@@ -521,5 +550,23 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (defaultUi == 1 || defaultUi == 3) {
+			//处理部分机型调起授权页面的Activity设置固定方向之后，授权页面无法横竖屏切换
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//根据需要设置为横屏或者竖屏
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (defaultUi == 1 || defaultUi == 3) {
+			//处理部分机型调起授权页面的Activity设置固定方向之后，授权页面无法横竖屏切换
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+		}
+	}
 
 }
