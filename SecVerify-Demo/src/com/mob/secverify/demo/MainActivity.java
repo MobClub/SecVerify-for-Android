@@ -93,6 +93,9 @@ public class MainActivity extends BaseActivity {
 			case R.id.sec_verify_demo_main_verify: {
 				// 添加自定义控件
 				// 自定义UI
+
+				otherOauthPageCallback();
+
 				if (defaultUi == 0) {
 					addCustomView();
 					customizeUi();
@@ -129,6 +132,7 @@ public class MainActivity extends BaseActivity {
 			}
 		}
 	}
+
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -197,6 +201,9 @@ public class MainActivity extends BaseActivity {
 //			cb.onFailure(e ->{ });
 //			cb.onComplete( o -> { } );
 //		});
+
+		SecVerify.setDebugMode(true);
+		SecVerify.setTimeOut(5000);
 		SecVerify.preVerify(new OperationCallback() {
 			@Override
 			public void onComplete(Object data) {
@@ -232,6 +239,20 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
+	}
+
+	private void otherOauthPageCallback() {
+		//需要在verify之前设置
+		SecVerify.OtherOAuthPageCallBack(cb -> {
+			cb.pageOpenCallback(() -> Log.i(TAG, System.currentTimeMillis() + " pageOpened"));
+			cb.loginBtnClickedCallback(() -> Log.i(TAG, System.currentTimeMillis() + " loginBtnClicked"));
+			cb.agreementPageClosedCallback(() -> Log.i(TAG, System.currentTimeMillis() + " agreementPageClosed"));
+			cb.agreementPageOpenedCallback(() -> Log.i(TAG, System.currentTimeMillis() + " agreementPageOpened"));
+			cb.cusAgreement1ClickedCallback(() -> Log.i(TAG, System.currentTimeMillis() + " cusAgreement1ClickedCallback"));
+			cb.cusAgreement2ClickedCallback(() -> Log.i(TAG, System.currentTimeMillis() + " cusAgreement2ClickedCallback"));
+			cb.pageCloseCallback(() -> Log.i(TAG, System.currentTimeMillis() + " pageClosed"));
+		});
+
 	}
 
 	/**
