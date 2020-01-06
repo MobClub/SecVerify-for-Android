@@ -1,6 +1,16 @@
 package com.mob.secverify.demo.util;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -9,17 +19,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mob.MobSDK;
 import com.mob.secverify.datatype.LandUiSettings;
 import com.mob.secverify.datatype.UiSettings;
 import com.mob.secverify.demo.R;
+import com.mob.secverify.ui.AgreementPage;
 import com.mob.tools.utils.ResHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomizeUtils {
+	private static String url;
+
 	public static UiSettings customizeUi(){
 		return new UiSettings.Builder()
+				.setAgreementUncheckHintType(0)
 				/** 标题栏 */
 				// 标题栏背景色资源ID
 				.setNavColorId(R.color.sec_verify_demo_text_color_blue)
@@ -96,25 +111,29 @@ public class CustomizeUtils {
 				// 隐私协议复选框背景图资源ID，建议使用selector
 				.setCheckboxImgId(R.drawable.sec_verify_demo_customized_checkbox_selector)
 				// 隐私协议复选框默认状态，默认为“选中”
-				.setCheckboxDefaultState(true)
+//				.setCheckboxDefaultState(true)
 				// 隐私协议字体颜色资源ID（自定义隐私协议的字体颜色也受该值影响）
-				.setAgreementColorId(R.color.sec_verify_demo_main_color)
+//				.setAgreementColorId(R.color.sec_verify_demo_main_color)
 				// 自定义隐私协议一文字资源ID
-//				.setCusAgreementNameId1(R.string.sec_verify_demo_customize_agreement_name_1)
-//				// 自定义隐私协议一URL
-//				.setCusAgreementUrl1("http://www.baidu.com")
-////				自定义隐私协议一颜色
-//                .setCusAgreementColor1(R.color.sec_verify_demo_main_color)
-//				// 自定义隐私协议二文字资源ID
-//				.setCusAgreementNameId2(R.string.sec_verify_demo_customize_agreement_name_2)
-//				// 自定义隐私协议二URL
-//				.setCusAgreementUrl2("https://www.jianshu.com")
-////				自定义隐私协议二颜色
-//                .setCusAgreementColor2(R.color.sec_verify_demo_main_color)
+				.setCusAgreementNameId1(R.string.sec_verify_demo_customize_agreement_name_1)
+				// 自定义隐私协议一URL
+				.setCusAgreementUrl1("http://www.baidu.com")
+//				自定义隐私协议一颜色
+				.setCusAgreementColor1(R.color.sec_verify_demo_main_color)
+				// 自定义隐私协议二文字资源ID
+				.setCusAgreementNameId2(R.string.sec_verify_demo_customize_agreement_name_2)
+				// 自定义隐私协议二URL
+				.setCusAgreementUrl2("https://www.jianshu.com")
+//				自定义隐私协议二颜色
+				.setCusAgreementColor2(R.color.sec_verify_demo_main_color)
+				.setCusAgreementNameId3("自有服务策略")
+				.setCusAgreementUrl3("http://www.baidu.com")
+				.setCusAgreementColor3(R.color.blue)
+				.setAgreementTextAnd3("&")
 				//隐私协议是否左对齐，默认居中
-				.setAgreementGravityLeft(false)
+				.setAgreementGravityLeft(true)
 				//隐私协议其他文字颜色
-				.setAgreementBaseTextColorId(R.color.sec_verify_demo_text_color_common_black)
+//				.setAgreementBaseTextColorId(R.color.sec_verify_demo_text_color_common_black)
 				//隐私协议 x轴偏移量，默认30dp
 				.setAgreementOffsetX(R.dimen.sec_verify_demo_agreement_offset_x)
 				//隐私协议 rightMargin右偏移量，默认30dp
@@ -143,25 +162,28 @@ public class CustomizeUtils {
 				.setStartActivityTransitionAnim(R.anim.translate_in,R.anim.translate_out)
 				.setFinishActivityTransitionAnim(R.anim.translate_in,R.anim.translate_out)
 				//设置隐私协议文字起始
-				.setAgreementTextStart(R.string.sec_verify_demo_agreement_text_start)
-				//设置隐私协议文字连接
-				.setAgreementTextAnd1(R.string.sec_verify_demo_agreement_text_and1)
-				//设置隐私协议文字连接
-				.setAgreementTextAnd2(R.string.sec_verify_demo_agreement_text_and2)
-				//设置隐私协议文字结束
-				.setAgreementTextEnd(R.string.sec_verify_demo_agreement_text_end)
-				//设置移动隐私协议文字
-				.setAgreementCmccText(R.string.sec_verify_demo_agreement_text_cmcc)
-				//设置联通隐私协议文字
-				.setAgreementCuccText(R.string.sec_verify_demo_agreement_text_cucc)
-				//设置电信隐私协议文字
-				.setAgreementCtccText(R.string.sec_verify_demo_agreement_text_ctcc)
+//				.setAgreementTextStart(R.string.sec_verify_demo_agreement_text_start)
+//				//设置隐私协议文字连接
+//				.setAgreementTextAnd1(R.string.sec_verify_demo_agreement_text_and1)
+//				//设置隐私协议文字连接
+//				.setAgreementTextAnd2(R.string.sec_verify_demo_agreement_text_and2)
+//				//设置隐私协议文字结束
+//				.setAgreementTextEnd(R.string.sec_verify_demo_agreement_text_end)
+//				//设置移动隐私协议文字
+//				.setAgreementCmccText(R.string.sec_verify_demo_agreement_text_cmcc)
+//				//设置联通隐私协议文字
+//				.setAgreementCuccText(R.string.sec_verify_demo_agreement_text_cucc)
+//				//设置电信隐私协议文字
+//				.setAgreementCtccText(R.string.sec_verify_demo_agreement_text_ctcc)
+				.setAgreementText(buildSpanString())
+//				.setAgreementUncheckHintText(R.string.ct_account_brand_text)
+				.setAgreementUncheckHintText("请阅读并勾选隐私协议")
 				.build();
 	}
 
-
 	public static UiSettings customizeUi1(){
 		return new UiSettings.Builder()
+				.setAgreementUncheckHintType(1)
 				/** 标题栏 */
 				// 标题栏背景色资源ID
 				.setNavColorId(R.color.sec_verify_demo_text_color_blue)
@@ -254,10 +276,11 @@ public class CustomizeUtils {
 				/** 隐私协议 */
 				//是否隐藏复选框(设置此属性true时setCheckboxDefaultState不会生效)
 				.setCheckboxHidden(false)
+				.setCheckboxDefaultState(false)
 				// 隐私协议复选框背景图资源ID，建议使用selector
 				.setCheckboxImgId(R.drawable.sec_verify_demo_customized_checkbox_selector)
 				// 隐私协议复选框默认状态，默认为“选中”
-				.setCheckboxDefaultState(true)
+//				.setCheckboxDefaultState(true)
 				// 隐私协议字体颜色资源ID（自定义隐私协议的字体颜色也受该值影响）
 				.setAgreementColorId(R.color.sec_verify_demo_main_color)
 				// 自定义隐私协议一文字资源ID
@@ -315,31 +338,27 @@ public class CustomizeUtils {
 	}
 
 	public static UiSettings customizeUi2(){
+		Resources resources = MobSDK.getContext().getResources();
+		DisplayMetrics dm = resources.getDisplayMetrics();
+		float density = dm.density;
+		int width = dm.widthPixels/2;
+		int height = dm.heightPixels;
 		return new UiSettings.Builder()
-				.setLogoOffsetBottomY(R.dimen.sec_verify_demo_logo_offset_bottom_y_customize)
-				.setNumberOffsetBottomY(R.dimen.sec_verify_demo_number_offset_bottom_y_customize)
-				.setSwitchAccOffsetBottomY(R.dimen.sec_verify_demo_switch_acc_offset_bottom_y_customize)
-				.setLoginBtnOffsetBottomY(R.dimen.sec_verify_demo_login_btn_offset_bottom_y_customize)
-				.setNumberOffsetRightX(R.dimen.sec_verify_demo_number_field_offset_right_x_customize)
-				.setSwitchAccOffsetRightX(R.dimen.sec_verify_demo_switch_acc_offset_right_x_customize)
-				.setLoginBtnOffsetRightX(R.dimen.sec_verify_demo_login_btn_offset_right_x_customize)
-				.setLoginBtnOffsetX(R.dimen.sec_verify_demo_login_btn_offset_right_x_customize)
-				.setSloganOffsetRightX(R.dimen.sec_verify_demo_slogan_offset_right_x_customize)
-				.setNumberAlignParentRight(true)
-				.setSwitchAccAlignParentRight(true)
-				.setAgreementAlignParentRight(false)
-				.setLoginBtnAlignParentRight(true)
-				.setSloganAlignParentRight(true)
+				.setLogoOffsetX(ResHelper.pxToDip(MobSDK.getContext(),width)-40)
+				.setNumberOffsetX(ResHelper.pxToDip(MobSDK.getContext(),width)-50)
+				.setSwitchAccOffsetX(ResHelper.pxToDip(MobSDK.getContext(),width)-40)
+				.setNumberOffsetY(100)
+				.setLoginBtnOffsetY(200)
+				.setSwitchAccOffsetY(250)
 				.setBackgroundClickClose(false)
 				.setImmersiveTheme(false)
 				//设置状态栏文字颜色为黑色，只在6.0以上生效
 				.setImmersiveStatusTextColorBlack(false)
 				.setDialogMaskBackgroundClickClose(true)
-				.setStartActivityTransitionAnim(R.anim.translate_bottom_in,R.anim.translate_bottom_out)
-				.setFinishActivityTransitionAnim(R.anim.translate_bottom_in,R.anim.translate_bottom_out)
-				.setDialogTheme(true)
-				.setDialogAlignBottom(true)
 				.setBottomTranslateAnim(true)
+				.setDialogTheme(true)
+				.setDialogHeight(500)
+				.setDialogAlignBottom(true)
 				.build();
 	}
 
@@ -469,11 +488,11 @@ public class CustomizeUtils {
 				.setSloganTextSize( 16)
 				.setSloganTextColor(0xffFF6347)
 				.setSloganHidden( false)
-				.setStartActivityTransitionAnim(ResHelper.getAnimRes(context,"zoom_in"),ResHelper.getAnimRes(context,"zoom_out"))
-				.setFinishActivityTransitionAnim(ResHelper.getAnimRes(context,"zoom_in"),ResHelper.getAnimRes(context,"zoom_out"))
+				.setStartActivityTransitionAnim(R.anim.zoom_in, R.anim.zoom_out)
+				.setFinishActivityTransitionAnim(R.anim.zoom_in, R.anim.zoom_out)
 				.setImmersiveTheme( false)
 				.setImmersiveStatusTextColorBlack( true)
-
+//
 //				.setDialogTheme( true)
 //				.setDialogAlignBottom( false)
 //				.setDialogOffsetX( 80)
@@ -482,10 +501,10 @@ public class CustomizeUtils {
 //				.setDialogHeight( 400)
 //				.setDialogMaskBackground(context.getResources().getDrawable(R.drawable.sec_verify_demo_common_progress_dialog_bg))
 //				.setDialogMaskBackgroundClickClose( true)
-
-//				.setTranslateAnim( true)
-//				.setZoomAnim( true)
-//				.setFadeAnim( true)
+//
+				.setTranslateAnim( true)
+				.setZoomAnim( true)
+				.setFadeAnim( true)
 				.build();
 
 	}
@@ -637,5 +656,113 @@ public class CustomizeUtils {
 		return null;
 	}
 
+
+	private static SpannableString buildSpanString() {
+		String operatorText = "";
+		if (OperatorUtils.getCellularOperatorType() == 1){
+			operatorText = "《中国移动认证服务条款》";
+			url = "https://wap.cmpassport.com/resources/html/contract.html";
+		} else if (OperatorUtils.getCellularOperatorType() == 2){
+			operatorText = "《中国联通认证服务条款》";
+			url = "https://ms.zzx9.cn/html/oauth/protocol2.html";
+		} else  if (OperatorUtils.getCellularOperatorType() == 3){
+			operatorText = "《中国电信认证服务条款》";
+			url = "https://e.189.cn/sdk/agreement/content.do?type=main&appKey=&hidetop=true&returnUrl=";
+		}
+		String ageementText = "同意"+operatorText+"及《自有隐私协议》和" +
+				"《自有服务策略》、《其他隐私协议》并授权秒验使用本机号码登录";
+		String cusPrivacy1 = "《自有隐私协议》";
+		String cusPrivacy2 = "《自有服务策略》";
+		String cusPrivacy3 = "《其他隐私协议》";
+		int baseColor = MobSDK.getContext().getResources().getColor(R.color.sec_verify_demo_text_color_common_black);
+		int privacyColor = Color.parseColor("#FFFE7A4E");
+		int cusPrivacyColor1 = Color.parseColor("#FF4E96FF");
+		int cusPrivacyColor2 = Color.parseColor("#FF4E96FF");
+		int cusPrivacyColor3 = Color.parseColor("#FFFE7A4E");
+		SpannableString spanStr = new SpannableString(ageementText);
+		int privacyIndex = ageementText.indexOf(operatorText);
+		spanStr.setSpan(new ForegroundColorSpan(baseColor)
+				, 0, ageementText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		//设置文字的单击事件
+		spanStr.setSpan(new ClickableSpan() {
+			@Override
+			public void updateDrawState(TextPaint ds) {
+				ds.setUnderlineText(false);
+			}
+
+			@Override
+			public void onClick(View widget) {
+				gotoAgreementPage(url,"");
+			}
+		}, privacyIndex, privacyIndex + operatorText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		//设置文字的前景色
+		spanStr.setSpan(new ForegroundColorSpan(privacyColor), privacyIndex, privacyIndex + operatorText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		if (!TextUtils.isEmpty(cusPrivacy1)) {
+			int privacy1Index = ageementText.indexOf(cusPrivacy1);
+			//设置文字的单击事件
+			spanStr.setSpan(new ClickableSpan() {
+				@Override
+				public void updateDrawState(TextPaint ds) {
+					ds.setUnderlineText(false);
+				}
+
+				@Override
+				public void onClick(View widget) {
+					gotoAgreementPage("https://www.mob.com", null);
+				}
+			}, privacy1Index, privacy1Index + "《自有隐私协议》".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			//设置文字的前景色
+			spanStr.setSpan(new ForegroundColorSpan(cusPrivacyColor1), privacy1Index, privacy1Index + cusPrivacy1.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+		if (!TextUtils.isEmpty(cusPrivacy2)) {
+			int privacy2Index = ageementText.lastIndexOf(cusPrivacy2);
+			//设置文字的单击事件
+			spanStr.setSpan(new ClickableSpan() {
+				@Override
+				public void updateDrawState(TextPaint ds) {
+					ds.setUnderlineText(false);
+				}
+
+				@Override
+				public void onClick(View widget) {
+					gotoAgreementPage("https://www.baidu.com", null);
+				}
+			}, privacy2Index, privacy2Index + cusPrivacy2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			//设置文字的前景色
+			spanStr.setSpan(new ForegroundColorSpan(cusPrivacyColor2), privacy2Index, privacy2Index + cusPrivacy2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+		if (!TextUtils.isEmpty(cusPrivacy3)) {
+			int privacy3Index = ageementText.lastIndexOf(cusPrivacy3);
+			//设置文字的单击事件
+			spanStr.setSpan(new ClickableSpan() {
+				@Override
+				public void updateDrawState(TextPaint ds) {
+					ds.setUnderlineText(false);
+					ds.linkColor = Color.parseColor("#FFFFFF");
+				}
+
+				@Override
+				public void onClick(View widget) {
+					gotoAgreementPage("https://www.baidu.com", null);
+				}
+			}, privacy3Index, privacy3Index + cusPrivacy3.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			//设置文字的前景色
+			spanStr.setSpan(new ForegroundColorSpan(cusPrivacyColor3), privacy3Index, privacy3Index + cusPrivacy3.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+		return spanStr;
+	}
+
+	private static void gotoAgreementPage(String agreementUrl, String title) {
+		if (TextUtils.isEmpty(agreementUrl)) {
+			return;
+		}
+		AgreementPage page = new AgreementPage();
+		Intent i = new Intent();
+		i.putExtra("extra_agreement_url", agreementUrl);
+		if (!TextUtils.isEmpty(title)) {
+			i.putExtra("privacy",title);
+		}
+		page.show(MobSDK.getContext(), i);
+	}
 
 }

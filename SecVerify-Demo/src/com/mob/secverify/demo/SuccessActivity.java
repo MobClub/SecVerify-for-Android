@@ -2,15 +2,15 @@ package com.mob.secverify.demo;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.mob.secverify.demo.entity.LoginResult;
 import com.mob.secverify.demo.util.Const;
-import com.mob.secverify.ui.component.VerifyCommonButton;
 
 public class SuccessActivity extends BaseActivity {
 	private static final String TAG = "SuccessActivity";
-	private VerifyCommonButton toHomepageBtn;
+	private Button toHomepageBtn;
 	private TextView phoneTv;
 	private String phone;
 

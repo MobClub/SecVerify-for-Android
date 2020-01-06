@@ -30,12 +30,14 @@
 		android:textSize="@dimen/sec_verify_demo_text_size_s"
 		android:textColor="@color/sec_verify_demo_text_color_common_black"
 		tools:text="13158457264"/>
-	<com.mob.secverify.ui.component.VerifyCommonButton
+	<Button
 		android:id="@+id/sec_verify_demo_success_one_more_try_btn"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/sec_verify_demo_common_btn_height"
 		android:layout_marginTop="50dp"
 		android:layout_marginLeft="@dimen/sec_verify_demo_common_edge_margin"
 		android:layout_marginRight="@dimen/sec_verify_demo_common_edge_margin"
-		app:vcombtn_text="@string/sec_verify_demo_success_one_more_try"/>
+		android:background="@drawable/sec_verify_shape_rectangle"
+		android:textColor="@color/sec_verify_common_bg"
+		android:text="@string/sec_verify_demo_success_one_more_try"/>
 </LinearLayout>

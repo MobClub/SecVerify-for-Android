@@ -14,7 +14,7 @@
 	android:bottom="4dp"
 	android:right="2dp">
 	<shape>
-		<solid android:color="@color/white" />
+		<solid android:color="@color/sec_verify_demo_common_bg" />
 		<corners android:radius="10dp" />
 	</shape>
 </item>

@@ -1,4 +1,5 @@
 -ignorewarnings
+#-dontpreverify
 -keepattributes SourceFile,LineNumberTable,Exceptions,InnerClasses,EnclosingMethod,Signature,*Annotation*
 # for SecVerify
 -keep class android.webkit.**{*;}

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,6 @@ import com.mob.secverify.demo.util.Const;
 import com.mob.secverify.demo.util.CustomizeUtils;
 import com.mob.secverify.exception.VerifyErr;
 import com.mob.secverify.exception.VerifyException;
-import com.mob.secverify.ui.component.VerifyCommonButton;
 
 import java.util.ArrayList;
 
@@ -45,8 +45,7 @@ public class MainActivity extends BaseActivity {
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_CODE = 1001;
 	private GifImageView logoIv;
-	private VerifyCommonButton oneKeyLoginBtn;
-	private VerifyCommonButton verifyBtn;
+	private Button verifyBtn;
 	private TextView versionTv;
 	private boolean devMode = false;
 	private int defaultUi = 0;
@@ -91,11 +90,10 @@ public class MainActivity extends BaseActivity {
 		int id = v.getId();
 		switch (id) {
 			case R.id.sec_verify_demo_main_verify: {
+				//授权界面其他回调
+				otherOauthPageCallback();
 				// 添加自定义控件
 				// 自定义UI
-
-				otherOauthPageCallback();
-
 				if (defaultUi == 0) {
 					addCustomView();
 					customizeUi();
@@ -133,19 +131,17 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUEST_CODE) {
+			preVerify();
 		}
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		// Demo为了演示效果，动态授权结束后做一次预登录
-		preVerify();
 	}
 
 	@Override
@@ -155,13 +151,11 @@ public class MainActivity extends BaseActivity {
 
 	private void initView() {
 		logoIv = findViewById(R.id.sec_verify_demo_main_logo);
-		oneKeyLoginBtn = findViewById(R.id.sec_verify_demo_main_one_key_login);
 		verifyBtn = findViewById(R.id.sec_verify_demo_main_verify);
 		versionTv = findViewById(R.id.sec_verify_demo_main_version);
 		versionTv.setText(SecVerify.getVersion());
 
 		logoIv.setImageResource(R.drawable.sec_verify_demo_tradition);
-		oneKeyLoginBtn.setOnClickListener(this);
 		verifyBtn.setOnClickListener(this);
 		versionTv.setOnClickListener(this);
 		logoIv.setOnClickListener(this);
@@ -197,17 +191,18 @@ public class MainActivity extends BaseActivity {
 	 * 建议提前调用预登录接口，可以加快免密登录过程，提高用户体验
 	 */
 	private void preVerify() {
-//		SecVerify.preVerify( cb -> {
+		//		SecVerify.preVerify( cb -> {
 //			cb.onFailure(e ->{ });
 //			cb.onComplete( o -> { } );
 //		});
 
-		SecVerify.setDebugMode(true);
+		//设置在2000-80000之内
 		SecVerify.setTimeOut(5000);
+//		//移动的debug tag 是CMCC-SDK,电信是CT_ 联通PriorityAsynvTask
+		SecVerify.setDebugMode(true);
 		SecVerify.preVerify(new OperationCallback() {
 			@Override
 			public void onComplete(Object data) {
-				// Nothing to do
 				if (devMode) {
 					Toast.makeText(MainActivity.this, "预登录成功", Toast.LENGTH_SHORT).show();
 				}
@@ -215,7 +210,6 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onFailure(VerifyException e) {
-				// Nothing to do
 				if (devMode) {
 					// 登录失败
 					Log.e(TAG, "preVerify failed", e);
@@ -251,6 +245,7 @@ public class MainActivity extends BaseActivity {
 			cb.cusAgreement1ClickedCallback(() -> Log.i(TAG, System.currentTimeMillis() + " cusAgreement1ClickedCallback"));
 			cb.cusAgreement2ClickedCallback(() -> Log.i(TAG, System.currentTimeMillis() + " cusAgreement2ClickedCallback"));
 			cb.pageCloseCallback(() -> Log.i(TAG, System.currentTimeMillis() + " pageClosed"));
+			cb.checkboxStatusChangedCallback(isChecked -> Log.i(TAG,"current checkbox  checked is" + isChecked));
 		});
 
 	}
@@ -354,6 +349,9 @@ public class MainActivity extends BaseActivity {
 				@Override
 				public void onComplete(com.mob.secverify.demo.entity.LoginResult data) {
 					CommonProgressDialog.dismissProgressDialog();
+					if (data == null){
+						return;
+					}
 					Log.d(TAG, "Login success. data: " + data.toJSONString());
 					vibrate();
 					// 服务端登录成功，跳转成功页
@@ -432,9 +430,6 @@ public class MainActivity extends BaseActivity {
 		SecVerify.setLandUiSettings(uiSettings1);
 	}
 
-	/**
-	 * 添加自定义view
-	 */
 	private void addCustomView() {
 		CustomUIRegister.addCustomizedUi(CustomizeUtils.buildCustomView(this), new CustomViewClickListener() {
 			@Override
@@ -453,6 +448,12 @@ public class MainActivity extends BaseActivity {
 				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		});
+		//将授权界面的loadingView设置隐藏
+//		View view = new View(MainActivity.this);
+//		view.setBackgroundColor(getResources().getColor(R.color.sec_verify_demo_common_bg_transparent));
+//		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(1, 1);
+//		view.setLayoutParams(params);
+//		CustomUIRegister.setCustomizeLoadingView(view);
 	}
 
 	private void addCustomView1() {
@@ -467,7 +468,7 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		});
-
+		//添加自定义的loadingView
 		View view = LayoutInflater.from(this).inflate(R.layout.sec_verify_demo_loading,null);
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		params.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -505,7 +506,6 @@ public class MainActivity extends BaseActivity {
 				String msg = "";
 				if (id == R.id.customized_btn_id_1) {
 					msg = "按钮1 clicked";
-					// 自定义控件点击时，SecVerify默认不关闭授权页面，若需关闭，可调用该方法
 					addCustomView1();
 					customizeUi2();
 					SecVerify.refreshOAuthPage();
@@ -537,7 +537,6 @@ public class MainActivity extends BaseActivity {
 				} else if (id == R.id.customized_view_id) {
 					return;
 				}
-				// 关闭加载框
 				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -561,17 +560,6 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 
-	private void switchDevMode() {
-		if (devMode) {
-			devMode = false;
-			Toast.makeText(this, "开发者模式：Off", Toast.LENGTH_SHORT).show();
-		} else {
-			devMode = true;
-			Toast.makeText(this, "开发者模式：On", Toast.LENGTH_SHORT).show();
-		}
-	}
-
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -587,6 +575,17 @@ public class MainActivity extends BaseActivity {
 		if (defaultUi == 1 || defaultUi == 3) {
 			//处理部分机型调起授权页面的Activity设置固定方向之后，授权页面无法横竖屏切换
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+		}
+	}
+
+
+	private void switchDevMode() {
+		if (devMode) {
+			devMode = false;
+			Toast.makeText(this, "开发者模式：Off", Toast.LENGTH_SHORT).show();
+		} else {
+			devMode = true;
+			Toast.makeText(this, "开发者模式：On", Toast.LENGTH_SHORT).show();
 		}
 	}
 

@@ -9,6 +9,7 @@
 	<string name="sec_verify_demo_login">登录</string>
 	<string name="sec_verify_demo_customize_agreement_name_1">服务条款一</string>
 	<string name="sec_verify_demo_customize_agreement_name_2">服务条款二</string>
+	<string name="sec_verify_demo_customize_agreement_name_3">服务条款三</string>
 
 	<!-- 认证成功页 -->
 	<string name="sec_verify_demo_success_complete">验证成功</string>
