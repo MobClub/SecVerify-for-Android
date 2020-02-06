@@ -128,7 +128,7 @@ public class CustomizeUtils {
 				.setCusAgreementColor2(R.color.sec_verify_demo_main_color)
 				.setCusAgreementNameId3("自有服务策略")
 				.setCusAgreementUrl3("http://www.baidu.com")
-				.setCusAgreementColor3(R.color.blue)
+				.setCusAgreementColor3(R.color.sec_verify_demo_main_color)
 				.setAgreementTextAnd3("&")
 				//隐私协议是否左对齐，默认居中
 				.setAgreementGravityLeft(true)
