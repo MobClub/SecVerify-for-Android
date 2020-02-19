@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/mobcommon_authorize_dialog_bg"
+	android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/sec_verify_demo_alert_dialog_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="15dp"
+		android:maxLines="2"
+		android:paddingLeft="20dp"
+		android:paddingRight="20dp"
+		android:textColor="#202122"
+		android:textSize="18dp"
+		android:textStyle="bold"
+		tools:text="无法使用移动网络" />
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_marginTop="15dp"
+		android:layout_weight="1"
+		android:scrollbarThumbVertical="@null">
+		<TextView
+			android:id="@+id/sec_verify_demo_alert_dialog_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="20dp"
+			android:paddingRight="20dp"
+			android:textColor="#555555"
+			android:textSize="14dp"
+			tools:text="OPPO手机首次需手动关闭WIFI并允许使用移动网络或者前往双卡与移动网络设置中的 使用WLAN与移动网络的应用 设置当前APP可使用移动数据" />
+	</ScrollView>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="45dp"
+		android:layout_marginTop="15dp"
+		android:gravity="center_vertical">
+		<TextView
+			android:id="@+id/sec_verify_demo_alert_dialog_cancel"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:background="@drawable/mobcommon_authorize_bottom_left_round_btn"
+			android:textColor="#202122"
+			android:textSize="18dp"
+			android:text="取消"/>
+
+		<View
+			android:layout_width="1dp"
+			android:layout_height="match_parent"
+			android:background="#F5F5F5" />
+		<TextView
+			android:id="@+id/sec_verify_demo_alert_dialog_allow"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:background="@drawable/mobcommon_authorize_bottom_right_round_btn"
+			android:textColor="#FFFFFF"
+			android:textSize="18dp"
+			android:text="前往"/>
+	</LinearLayout>
+
+</LinearLayout>

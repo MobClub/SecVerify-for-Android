@@ -25,4 +25,5 @@
 	<string name="sec_verify_demo_agreement_text_and1">及</string>
 	<string name="sec_verify_demo_agreement_text_and2">和</string>
 	<string name="sec_verify_demo_agreement_text_end">并授权秒验使用本机号码登录</string>
+	<string name="sec_verify_demo_privacy_text">欢迎您使用MobTech提供的秒验演示DEMO，秒验是一款帮助开发者实现一键验证功能的产品，从根源上降低企业验证成本，有效提高拉新转化率，降低因验证带来的流失率，3秒完成手机号验证。我们将依据MobTech的《隐私政策》来帮助你了解我们需要收集哪些数据。请您详细查看我们的隐私政策，详见 《MobService隐私条款》</string>
 </resources>
