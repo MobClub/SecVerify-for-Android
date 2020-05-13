@@ -1,52 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:padding="20dp"
-	tools:context=".MainActivity"
-	android:gravity="center_horizontal"
-	android:background="@color/sec_verify_demo_common_bg"
-	android:orientation="vertical">
-	<pl.droidsonroids.gif.GifImageView
-		android:id="@+id/sec_verify_demo_main_logo"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="40dp"
-		android:scaleType="centerInside"/>
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="1"/>
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="20dp"
-		android:layout_marginBottom="20dp"
-		android:textSize="@dimen/sec_verify_demo_text_size_l"
-		android:textColor="@color/sec_verify_demo_text_color_common_black"
-		android:text="@string/sec_verify_demo_hint"/>
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical">
-		<Button
-			android:id="@+id/sec_verify_demo_main_verify"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/sec_verify_demo_common_btn_height"
-			android:background="@drawable/sec_verify_shape_rectangle"
-			android:textColor="@color/sec_verify_common_bg"
-			android:text="@string/sec_verify_demo_verify"/>
-	</LinearLayout>
-	<TextView
-		android:id="@+id/sec_verify_demo_main_version"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="30dp"
-		android:layout_gravity="bottom|center"
-		android:textSize="@dimen/sec_verify_demo_text_size_s"
-		android:textColor="@color/sec_verify_demo_text_color_common_gray"
-		tools:text="版本号"/>
-</LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sec_verify_demo_main_background"
+    android:gravity="center_horizontal">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/sec_verify_demo_main_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sec_verify_demo_bottom_container"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="@dimen/sec_verify_demo_common_20"
+        android:layout_marginTop="40dp"
+        android:scaleType="center" />
+
+    <TextView
+        android:id="@+id/sec_verify_demo_main_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_50"
+        android:drawableLeft="@drawable/sec_verify_demo_logo_white"
+        android:drawablePadding="@dimen/sec_verify_demo_common_20"
+        android:text="@string/app_name"
+        android:textColor="@color/sec_verify_common_bg"
+        android:textSize="@dimen/sec_verify_demo_text_size_xl"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/sec_verify_demo_show_two"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sec_verify_demo_main_app_name"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_10"
+        android:gravity="center_horizontal"
+        android:text="让用户不再等待"
+        android:textColor="@color/sec_verify_common_bg"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/sec_verify_demo_bottom_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/sec_verify_demo_shape_rectangle_corner"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/sec_verify_demo_main_verify"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sec_verify_demo_common_50"
+            android:layout_marginLeft="@dimen/sec_verify_demo_common_75"
+            android:layout_marginTop="70dp"
+            android:layout_marginRight="@dimen/sec_verify_demo_common_75"
+            android:background="@drawable/sec_verify_demo_shape_rectangle"
+            android:text="一键登录 （全屏）"
+            android:textColor="@color/sec_verify_common_bg" />
+
+        <Button
+            android:id="@+id/sec_verify_demo_main_verify_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sec_verify_demo_common_50"
+            android:layout_marginLeft="@dimen/sec_verify_demo_common_75"
+            android:layout_marginTop="@dimen/sec_verify_demo_common_30"
+            android:layout_marginRight="@dimen/sec_verify_demo_common_75"
+            android:background="@drawable/sec_verify_demo_shape_rectangle"
+            android:text="一键登录 （弹窗）"
+            android:textColor="@color/sec_verify_common_bg" />
+
+        <TextView
+            android:id="@+id/sec_verify_demo_main_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="@dimen/sec_verify_demo_common_30"
+            android:layout_marginBottom="@dimen/sec_verify_demo_common_20"
+            android:textColor="@color/sec_verify_demo_text_color_common_gray"
+            android:textSize="@dimen/sec_verify_demo_text_size_s"
+            tools:text="版本号" />
+    </LinearLayout>
+
+</RelativeLayout>

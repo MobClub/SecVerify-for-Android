@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sec_verify_demo_main_background_land"
+    android:gravity="center_horizontal">
+
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/sec_verify_demo_main_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:scaleType="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/sec_verify_demo_main_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:drawableLeft="@drawable/sec_verify_demo_logo_white"
+        android:drawablePadding="@dimen/sec_verify_demo_common_20"
+        android:text="秒验"
+        android:textColor="@color/sec_verify_common_bg"
+        android:textSize="@dimen/sec_verify_demo_text_size_xl"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/sec_verify_demo_show_two"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sec_verify_demo_main_app_name"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_10"
+        android:gravity="center_horizontal"
+        android:text="让用户不再等待"
+        android:textColor="@color/sec_verify_common_bg"
+        android:textSize="20sp" />
+
+
+    <Button
+        android:id="@+id/sec_verify_demo_main_verify"
+        android:layout_width="300dp"
+        android:layout_height="@dimen/sec_verify_demo_common_50"
+        android:layout_below="@+id/sec_verify_demo_show_two"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_30"
+        android:layout_marginRight="75dp"
+        android:background="@drawable/sec_verify_demo_shape_rectangle_white"
+        android:text="一键登录 （全屏）"
+        android:textColor="@color/sec_verify_demo_main_color" />
+
+    <Button
+        android:id="@+id/sec_verify_demo_main_verify_dialog"
+        android:layout_width="300dp"
+        android:layout_height="@dimen/sec_verify_demo_common_50"
+        android:layout_below="@+id/sec_verify_demo_main_verify"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_30"
+        android:layout_marginRight="75dp"
+        android:background="@drawable/sec_verify_demo_shape_rectangle_white"
+        android:text="一键登录 （弹窗）"
+        android:textColor="@color/sec_verify_demo_main_color" />
+
+    <TextView
+        android:id="@+id/sec_verify_demo_main_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_30"
+        android:layout_marginBottom="@dimen/sec_verify_demo_common_20"
+        android:textColor="@color/sec_verify_demo_common_bg"
+        android:textSize="@dimen/sec_verify_demo_text_size_s"
+        tools:text="版本号" />
+
+</RelativeLayout>

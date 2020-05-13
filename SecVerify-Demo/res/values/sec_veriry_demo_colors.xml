@@ -6,7 +6,8 @@
 	<color name="sec_verify_demo_text_color_common_gray_light">#CCCCCC</color>
 	<color name="sec_verify_demo_text_color_blue">#4E96FF</color>
 	<color name="sec_verify_demo_text_color_common_white">#EEEEEE</color>
-	<color name="sec_verify_demo_main_color">#FE7A4E</color>
+	<color name="sec_verify_demo_main_color">#00B6B5</color>
+	<color name="sec_verify_demo_main_color_transparent">#1A10B3B3</color>
 	<color name="sec_verify_demo_common_bg_transparent">#00FE7A4E</color>
 	<color name="sec_verify_demo_background_transparent">#4D000000</color>
 </resources>

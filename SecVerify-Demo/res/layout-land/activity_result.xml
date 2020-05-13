@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sec_verify_demo_common_bg"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".ResultActivity">
+
+    <ImageView
+        android:id="@+id/sec_verify_demo_verify_result_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_10"
+        android:src="@drawable/sec_verify_demo_verify_success" />
+
+    <TextView
+        android:id="@+id/sec_verify_demo_verify_result_success"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_15"
+        android:text="登录成功"
+        android:textColor="@color/sec_verify_demo_text_color_common_black"
+        android:textSize="@dimen/sec_verify_demo_text_size_m" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_10"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/sec_verify_demo_success_phone_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:scaleX="1.6"
+            android:scaleY="1.6"
+            android:src="@drawable/sec_verify_demo_phone" />
+
+        <TextView
+            android:id="@+id/sec_verify_demo_success_phone_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/sec_verify_demo_common_10"
+            android:textColor="@color/sec_verify_demo_text_color_common_gray"
+            android:textSize="14sp"
+            tools:text="13112345678" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sec_verify_demo_verify_result_one_more_try"
+        android:layout_width="250dp"
+        android:layout_height="@dimen/sec_verify_demo_common_50"
+        android:layout_marginTop="@dimen/sec_verify_demo_common_30"
+        android:background="@drawable/sec_verify_demo_shape_rectangle"
+        android:gravity="center"
+        android:text="返回首页"
+        android:textColor="@color/sec_verify_demo_common_bg" />
+
+</LinearLayout>

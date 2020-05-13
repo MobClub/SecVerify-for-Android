@@ -9,8 +9,8 @@ android {
         applicationId "com.mob.secverify.demo"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 20009
-        versionName "2.0.8"
+        versionCode 20010
+        versionName "2.0.9"
         ndk {
             // 选择要添加的对应 cpu 类型的 .so 库。
             abiFilters 'armeabi-v7a'
@@ -30,7 +30,6 @@ android {
         targetCompatibility = '1.8'
     }
 
-
 }
 
 // 在MobSDK的扩展中注册SecVerify的相关信息
@@ -38,7 +37,7 @@ MobSDK {
     appKey 'moba6b6c6d6'
     appSecret 'b89d2427a3bc7ad1aea1e1e8c1d36bf3'
     SecVerify {
-        version '2.0.8'
+        version '2.0.9'
         disable {
 //            CMCC{}
 //            CUCC{}
@@ -50,4 +49,5 @@ MobSDK {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
+    implementation 'com.tencent.bugly:crashreport:3.2.1'
 }

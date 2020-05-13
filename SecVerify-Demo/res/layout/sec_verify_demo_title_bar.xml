@@ -2,14 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				xmlns:tools="http://schemas.android.com/tools"
 			  android:layout_width="match_parent"
-			  android:layout_height="@dimen/sec_verify_demo_height_title_bar"
+			  android:layout_height="@dimen/sec_verify_demo_common_50"
 			  android:background="@color/sec_verify_demo_common_bg">
+	<ImageView
+		android:id="@+id/sec_verify_demo_title_bar_left_iv"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_marginLeft="@dimen/sec_verify_demo_common_10"
+		android:gravity="center"
+		android:src="@drawable/sec_verify_demo_back"
+		/>
 	<TextView
 		android:id="@+id/sec_verify_demo_title_bar_left"
+		android:layout_toRightOf="@+id/sec_verify_demo_title_bar_left_iv"
 		android:layout_width="60dp"
 		android:layout_height="match_parent"
-		android:gravity="center"
-		android:text="@string/sec_verify_demo_text_title_bar_back"
+		android:gravity="center_vertical"
+		android:text="返回"
 		android:textColor="@color/sec_verify_demo_text_color_common_black"
 		android:textSize="@dimen/sec_verify_demo_text_size_s"/>
 	<TextView
@@ -23,7 +32,7 @@
 		android:textSize="@dimen/sec_verify_demo_text_size_s"/>
 	<ImageView
 		android:id="@+id/sec_verify_demo_title_bar_right"
-		android:layout_width="@dimen/sec_verify_demo_height_title_bar"
+		android:layout_width="@dimen/sec_verify_demo_common_50"
 		android:layout_height="match_parent"
 		android:layout_alignParentRight="true"
 		android:scaleType="centerInside"

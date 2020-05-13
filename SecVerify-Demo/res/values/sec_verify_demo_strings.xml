@@ -3,20 +3,21 @@
 	<string name="sec_verify_demo_text_title_bar_back"><![CDATA[<]]></string>
 
 	<string name="app_name">秒验</string>
-	<string name="sec_verify_demo_one_key_login">一键登录(无服务器版)</string>
+	<string name="sec_verify_demo_one_key_login">一键登录</string>
 	<string name="sec_verify_demo_verify">一键验证</string>
 	<string name="sec_verify_demo_hint">开始验证！</string>
 	<string name="sec_verify_demo_login">登录</string>
+	<string name="sec_verify_demo_mob_service">Mob隐私条款</string>
 	<string name="sec_verify_demo_customize_agreement_name_1">服务条款一</string>
 	<string name="sec_verify_demo_customize_agreement_name_2">服务条款二</string>
 	<string name="sec_verify_demo_customize_agreement_name_3">服务条款三</string>
-
+	<string name="sec_verify_demo_no_more_wating">让用户不再等待</string>
 	<!-- 认证成功页 -->
 	<string name="sec_verify_demo_success_complete">验证成功</string>
 	<string name="sec_verify_demo_success_hint">跳转到登录后的首页</string>
 	<string name="sec_verify_demo_success_one_more_try">再次体验</string>
 
-	<string name="sec_verify_demo_other_login">其他登录</string>
+	<string name="sec_verify_demo_other_login">其他方式登录</string>
 
 	<string name="sec_verify_demo_agreement_text_cmcc">《中国移动认证服务条款》</string>
 	<string name="sec_verify_demo_agreement_text_cucc">《中国联通认证服务条款》</string>
@@ -26,4 +27,12 @@
 	<string name="sec_verify_demo_agreement_text_and2">和</string>
 	<string name="sec_verify_demo_agreement_text_end">并授权秒验使用本机号码登录</string>
 	<string name="sec_verify_demo_privacy_text">欢迎您使用MobTech提供的秒验演示DEMO，秒验是一款帮助开发者实现一键验证功能的产品，从根源上降低企业验证成本，有效提高拉新转化率，降低因验证带来的流失率，3秒完成手机号验证。我们将依据MobTech的《隐私政策》来帮助你了解我们需要收集哪些数据。请您详细查看我们的隐私政策，详见 《MobService隐私条款》</string>
+	<string name="sec_verify_demo_privacy_title">《MobService隐私条款》</string>
+
+	<string name="sec_verify_demo_page_one_key_login_description_logo">Logo</string>
+	<string name="sec_verify_demo_page_one_key_login_other_login">切换账号</string>
+	<string name="sec_verify_demo_page_one_key_login_login">登录</string>
+	<string name="sec_verify_demo_page_one_key_login_privacy">登录即同意%1$s%2$s%3$s并使用本机号码登录</string>
+
+	<string name="sec_verify_demo_back">返回</string>
 </resources>

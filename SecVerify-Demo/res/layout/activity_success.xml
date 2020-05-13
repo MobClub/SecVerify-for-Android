@@ -10,15 +10,15 @@
 	android:background="@color/sec_verify_demo_common_bg"
 	android:orientation="vertical">
 	<ImageView
-		android:layout_width="100dp"
-		android:layout_height="100dp"
-		android:layout_marginTop="90dp"
+		android:layout_width="@dimen/sec_verify_demo_common_100"
+		android:layout_height="@dimen/sec_verify_demo_common_100"
+		android:layout_marginTop="@dimen/sec_verify_demo_common_90"
 		android:scaleType="centerCrop"
 		android:src="@drawable/sec_verify_demo_success_complete"/>
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="20dp"
+		android:layout_marginTop="@dimen/sec_verify_demo_common_20"
 		android:textSize="@dimen/sec_verify_demo_text_size_m"
 		android:textColor="@color/sec_verify_demo_text_color_common_black"
 		android:text="@string/sec_verify_demo_success_complete"/>
@@ -26,18 +26,16 @@
 		android:id="@+id/sec_verify_demo_success_phone_tv"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="20dp"
+		android:layout_marginTop="@dimen/sec_verify_demo_common_20"
 		android:textSize="@dimen/sec_verify_demo_text_size_s"
 		android:textColor="@color/sec_verify_demo_text_color_common_black"
-		tools:text="13158457264"/>
-	<Button
+		tools:text="13112345678"/>
+	<com.mob.secverify.ui.component.VerifyCommonButton
 		android:id="@+id/sec_verify_demo_success_one_more_try_btn"
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/sec_verify_demo_common_btn_height"
-		android:layout_marginTop="50dp"
-		android:layout_marginLeft="@dimen/sec_verify_demo_common_edge_margin"
-		android:layout_marginRight="@dimen/sec_verify_demo_common_edge_margin"
-		android:background="@drawable/sec_verify_shape_rectangle"
-		android:textColor="@color/sec_verify_common_bg"
-		android:text="@string/sec_verify_demo_success_one_more_try"/>
+		android:layout_height="@dimen/sec_verify_demo_common_50"
+		android:layout_marginTop="@dimen/sec_verify_demo_common_50"
+		android:layout_marginLeft="@dimen/sec_verify_demo_common_20"
+		android:layout_marginRight="@dimen/sec_verify_demo_common_20"
+		app:vcombtn_text="@string/sec_verify_demo_success_one_more_try"/>
 </LinearLayout>

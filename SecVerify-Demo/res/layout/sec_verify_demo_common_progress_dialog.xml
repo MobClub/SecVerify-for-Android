@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="100dp"
+	android:layout_width="@dimen/sec_verify_demo_common_100"
 	android:background="@drawable/sec_verify_demo_common_progress_dialog_bg"
-	android:layout_height="100dp">
+	android:layout_height="@dimen/sec_verify_demo_common_100">
 
 	<ProgressBar
 		android:id="@+id/progress_bar"
 		style="@android:style/Widget.ProgressBar.Small.Inverse"
 		android:layout_width="wrap_content"
 		android:layout_centerInParent="true"
-		android:layout_height="100dp"/>
+		android:layout_height="@dimen/sec_verify_demo_common_100"/>
 </RelativeLayout>

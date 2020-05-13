@@ -7,7 +7,11 @@
 
     <uses-sdk tools:overrideLibrary="pl.droidsonroids.gif,com.mob.secverify,com.sdk" />
 
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <!--	移动运营商用于双卡手机切换，会更快，建议加上-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
 
     <application
         android:name="com.mob.MobApplication"
@@ -35,7 +39,17 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
+        <activity android:name=".ResultActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
+        <activity android:name=".DemoLoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            >
+        </activity>
     </application>
 
 </manifest>
