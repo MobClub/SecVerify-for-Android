@@ -3,7 +3,6 @@ package com.mob.secverify.demo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -67,7 +66,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private TextView versionTv;
 	private TextView appNameTv;
 	private boolean devMode = false;
-	private int defaultUi = 0;
 	private boolean isFirstTime = true;
 	private SharePrefrenceHelper sharePrefrenceHelper;
 	private boolean isVerifySupport = false;
@@ -140,6 +138,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				addCustomView();
 				customizeUi();
 //				SecVerify.setAdapterFullName("com.mob.secverify.demo.ui.component.DemoAdapter");
+//				SecVerify.setAdapterClass(DemoAdapter.class);
 				SecVerify.autoFinishOAuthPage(false);
 				isVerifySupport = SecVerify.isVerifySupport();
 				if (isVerifySupport) {
@@ -363,10 +362,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		SecVerify.verify(new VerifyCallback() {
 			@Override
 			public void onOtherLogin() {
-				if (defaultUi == 1){
-					//成功之后不会自动关闭授权页面，需要手动关闭
-					SecVerify.finishOAuthPage();
-				}
 				// 用户点击“其他登录方式”，处理自己的逻辑
 				CommonProgressDialog.dismissProgressDialog();
 				Toast.makeText(MainActivity.this, "其他方式登录", Toast.LENGTH_SHORT).show();
@@ -381,10 +376,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 			@Override
 			public void onComplete(VerifyResult data) {
-				if (defaultUi == 1){
-					//成功之后不会自动关闭授权页面，需要手动关闭
-					SecVerify.finishOAuthPage();
-				}
 				CommonProgressDialog.dismissProgressDialog();
 				if (data != null) {
 					Log.d(TAG, data.toJSONString());
@@ -435,10 +426,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			@Override
 			public void onFailure(VerifyException e) {
 				// 登录失败
-				if (defaultUi == 1){
-					//失败之后不会自动关闭授权页面，需要手动关闭
-					SecVerify.finishOAuthPage();
-				}
 				CommonProgressDialog.dismissProgressDialog();
 				Log.e(TAG, "verify failed", e);
 				// 错误码
@@ -533,25 +520,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			}
 		}
 	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (defaultUi == 1 || defaultUi == 3) {
-			//处理部分机型调起授权页面的Activity设置固定方向之后，授权页面无法横竖屏切换
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//根据需要设置为横屏或者竖屏
-		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (defaultUi == 1 || defaultUi == 3) {
-			//处理部分机型调起授权页面的Activity设置固定方向之后，授权页面无法横竖屏切换
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-		}
-	}
-
 
 	private void switchDevMode() {
 		if (devMode) {
