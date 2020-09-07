@@ -35,6 +35,11 @@ import com.mob.tools.utils.ResHelper;
 
 /**
  * 使用Adapter的方式修改授权页面ui,通过修改授权页面的控件属性，达到修改目的
+ *
+ *  * todo 需要注意以下内容
+ *  *  1、在结束当前授权页面时需要调用SecVerify.finishOAuthPage();来结束，否则会影响下次进入
+ *  *  2、在点击登录之后，不论登录成功或者失败，需要SecVerify.finishOAuthPage();结束当前页面， 否则会影响电信授权页面的回调导致页面无法结束
+ *  *  3、设置脱敏手机号需要在onResume中设置，onCreate中可能还未拿到这个脱敏手机号
  */
 public class DemoAdapter extends LoginAdapter implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 	private Activity activity;
