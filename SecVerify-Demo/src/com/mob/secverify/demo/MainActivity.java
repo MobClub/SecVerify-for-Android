@@ -3,6 +3,7 @@ package com.mob.secverify.demo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -31,11 +32,12 @@ import com.mob.MobSDK;
 import com.mob.PrivacyPolicy;
 import com.mob.secverify.CustomUIRegister;
 import com.mob.secverify.CustomViewClickListener;
+import com.mob.secverify.GetTokenCallback;
 import com.mob.secverify.OAuthPageEventCallback;
-import com.mob.secverify.OperationCallback;
+import com.mob.secverify.PageCallback;
+import com.mob.secverify.PreVerifyCallback;
 import com.mob.secverify.SecVerify;
 import com.mob.secverify.UiLocationHelper;
-import com.mob.secverify.VerifyCallback;
 import com.mob.secverify.datatype.VerifyResult;
 import com.mob.secverify.demo.entity.LoginResult;
 import com.mob.secverify.demo.exception.DemoException;
@@ -57,6 +59,7 @@ import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
 
+
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_CODE = 1001;
@@ -66,18 +69,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private TextView versionTv;
 	private TextView appNameTv;
 	private boolean devMode = false;
+	private int defaultUi = 0;
 	private boolean isFirstTime = true;
 	private SharePrefrenceHelper sharePrefrenceHelper;
 	private boolean isVerifySupport = false;
 	private boolean isPreVerifyDone = true;
 	private long starttime;
-
+	String mobToken;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 		CrashReport.initCrashReport(getApplicationContext(), "28fe0803ee", false);
-
+		setContentView(R.layout.activity_main);
 		if (Build.VERSION.SDK_INT >= 21){
 			// 设置沉浸式状态栏
 			View decorView = getWindow().getDecorView();
@@ -97,15 +100,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		initView();
 		checkPermissions();
 		// 建议提早调用该接口进行预登录，这将极大地加快验证流程
-		//当前本地网络环境是否支持登录，只检查本地网络环境 不代表预登录一定会成功
+//		showMobPrivacy();
+		showMobPrivacyDirect();
 		isVerifySupport = SecVerify.isVerifySupport();
 		if (isVerifySupport) {
 			preVerify();
 		} else {
 			Toast.makeText(this, "当前环境不支持", Toast.LENGTH_SHORT).show();
 		}
-//		showMobPrivacy();
-		showMobPrivacyDirect();
 	}
 
 	private void showMobPrivacyDirect() {
@@ -137,8 +139,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				}
 				addCustomView();
 				customizeUi();
-//				SecVerify.setAdapterFullName("com.mob.secverify.demo.ui.component.DemoAdapter");
-//				SecVerify.setAdapterClass(DemoAdapter.class);
+//				SecVerify.setAdapterFullName("com.mob.secverify.demo.ui.component.MyAdapter");
 				SecVerify.autoFinishOAuthPage(false);
 				isVerifySupport = SecVerify.isVerifySupport();
 				if (isVerifySupport) {
@@ -234,22 +235,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}
 	}
 
-
 	/**
 	 * 预登录
 	 * <p>
 	 * 建议提前调用预登录接口，可以加快免密登录过程，提高用户体验
 	 */
 	private void preVerify() {
+
 		isPreVerifyDone = false;
 		//设置在1000-10000之内
 		SecVerify.setTimeOut(5000);
 		//移动的debug tag 是CMCC-SDK,电信是CT_ 联通是PriorityAsyncTask
 		SecVerify.setDebugMode(true);
 		SecVerify.setUseCache(true);
-		SecVerify.preVerify(new OperationCallback() {
+		SecVerify.preVerify(new PreVerifyCallback() {
 			@Override
-			public void onComplete(Object data) {
+			public void onComplete(Void data) {
 				// Nothing to do
 				if (devMode) {
 					Toast.makeText(MainActivity.this, "预登录成功", Toast.LENGTH_SHORT).show();
@@ -359,108 +360,149 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			}
 		});
 		starttime = System.currentTimeMillis();
-		SecVerify.verify(new VerifyCallback() {
+		SecVerify.verify(new PageCallback() {
 			@Override
-			public void onOtherLogin() {
-				// 用户点击“其他登录方式”，处理自己的逻辑
-				CommonProgressDialog.dismissProgressDialog();
-				Toast.makeText(MainActivity.this, "其他方式登录", Toast.LENGTH_SHORT).show();
-			}
+			public void pageCallback(int code, String desc) {
+				Log.e(TAG, code + " " + desc);
+				if (code != 6119140) {
+					CommonProgressDialog.dismissProgressDialog();
+					if (devMode) {
+					Toast.makeText(MainActivity.this, code + " " + desc, Toast.LENGTH_SHORT).show();
+					}
 
-			@Override
-			public void onUserCanceled() {
-				// 用户点击“关闭按钮”或“物理返回键”取消登录，处理自己的逻辑
-				CommonProgressDialog.dismissProgressDialog();
-				Toast.makeText(MainActivity.this, "用户取消登录", Toast.LENGTH_SHORT).show();
+				}
 			}
-
+		}, new GetTokenCallback() {
 			@Override
 			public void onComplete(VerifyResult data) {
-				CommonProgressDialog.dismissProgressDialog();
-				if (data != null) {
-					Log.d(TAG, data.toJSONString());
-					// 获取授权码成功，将token信息传给应用服务端，再由应用服务端进行登录验证，此功能需由开发者自行实现
-					CommonProgressDialog.showProgressDialog(MainActivity.this);
-					LoginTask.getInstance().login(data, new ResultListener<LoginResult>() {
-						@Override
-						public void onComplete(LoginResult data) {
-							CommonProgressDialog.dismissProgressDialog();
-							Log.d(TAG, "Login success. data: " + data.toJSONString());
-							vibrate();
-							// 服务端登录成功，跳转成功页
-							gotoSuccessActivity(data);
-						}
-
-						@Override
-						public void onFailure(DemoException e) {
-							// 登录失败
-							Log.e(TAG, "login failed", e);
-							CommonProgressDialog.dismissProgressDialog();
-							// 错误码
-							int errCode = e.getCode();
-							// 错误信息
-							String errMsg = e.getMessage();
-							// 更详细的网络错误信息可以通过t查看，请注意：t有可能为null
-							Throwable t = e.getCause();
-							String errDetail = null;
-							if (t != null) {
-								errDetail = t.getMessage();
-							}
-
-							String msg = "获取授权码成功，应用服务器登录失败" + "\n错误码: " + errCode + "\n错误信息: " + errMsg;
-							if (!TextUtils.isEmpty(errDetail)) {
-								msg += "\n详细信息: " + errDetail;
-							}
-							if (!devMode) {
-								msg = "当前网络不稳定";
-							}
-							Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-							gotoSuccessActivity(null);
-							// Demo为了演示效果，登录失败时也做一次预登录
-							preVerify();
-						}
-					});
-				}
+				tokenToPhone(data);
 			}
 
 			@Override
 			public void onFailure(VerifyException e) {
-				// 登录失败
-				CommonProgressDialog.dismissProgressDialog();
-				Log.e(TAG, "verify failed", e);
-				// 错误码
-				int errCode = e.getCode();
-				// 错误信息
-				String errMsg = e.getMessage();
-				// 更详细的网络错误信息可以通过t查看，请注意：t有可能为null
-				Throwable t = e.getCause();
-				String errDetail = null;
-				if (t != null) {
-					errDetail = t.getMessage();
-				}
-
-				String msg = "错误码: " + errCode + "\n错误信息: " + errMsg;
-				if (!TextUtils.isEmpty(errDetail)) {
-					msg += "\n详细信息: " + errDetail;
-				}
-				if (!devMode) {
-					msg = "当前网络不稳定";
-					if (errCode == VerifyErr.C_LACK_OF_PERMISSIONS.getCode()
-							|| errCode == VerifyErr.C_NO_SIM.getCode()
-							|| errCode == VerifyErr.C_UNSUPPORTED_OPERATOR.getCode()
-							|| errCode == VerifyErr.C_CELLULAR_DISABLED.getCode()) {
-						msg = errMsg;
-					}
-				}
-				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-				gotoSuccessActivity(null);
+				showExceptionMsg(e);
 			}
 		});
+
+	}
+
+	private void tokenToPhone(VerifyResult data) {
+		CommonProgressDialog.dismissProgressDialog();
+		if (data != null) {
+			Log.d(TAG, data.toJSONString());
+			// 获取授权码成功，将token信息传给应用服务端，再由应用服务端进行登录验证，此功能需由开发者自行实现
+			CommonProgressDialog.showProgressDialog(MainActivity.this);
+			LoginTask.getInstance().login(data, new ResultListener<LoginResult>() {
+				@Override
+				public void onComplete(LoginResult data) {
+					CommonProgressDialog.dismissProgressDialog();
+					Log.d(TAG, "Login success. data: " + data.toJSONString());
+					vibrate();
+					// 服务端登录成功，跳转成功页
+					goResultActivity(data);
+				}
+
+				@Override
+				public void onFailure(DemoException e) {
+					// 登录失败
+					Log.e(TAG, "login failed", e);
+					CommonProgressDialog.dismissProgressDialog();
+					// 错误码
+					int errCode = e.getCode();
+					// 错误信息
+					String errMsg = e.getMessage();
+					// 更详细的网络错误信息可以通过t查看，请注意：t有可能为null
+					Throwable t = e.getCause();
+					String errDetail = null;
+					if (t != null) {
+						errDetail = t.getMessage();
+					}
+
+					String msg = "获取授权码成功，应用服务器登录失败" + "\n错误码: " + errCode + "\n错误信息: " + errMsg;
+					if (!TextUtils.isEmpty(errDetail)) {
+						msg += "\n详细信息: " + errDetail;
+					}
+					if (!devMode) {
+						msg = "当前网络不稳定";
+					}
+					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+					goResultActivity(null);
+					// Demo为了演示效果，登录失败时也做一次预登录
+					preVerify();
+				}
+			});
+		}
+	}
+
+	public void showExceptionMsg(VerifyException e) {
+		// 登录失败
+		if (defaultUi == 1){
+			//失败之后不会自动关闭授权页面，需要手动关闭
+			SecVerify.finishOAuthPage();
+		}
+		CommonProgressDialog.dismissProgressDialog();
+		Log.e(TAG, "verify failed", e);
+		// 错误码
+		int errCode = e.getCode();
+		// 错误信息
+		String errMsg = e.getMessage();
+		// 更详细的网络错误信息可以通过t查看，请注意：t有可能为null
+		Throwable t = e.getCause();
+		String errDetail = null;
+		if (t != null) {
+			errDetail = t.getMessage();
+		}
+
+		String msg = "错误码: " + errCode + "\n错误信息: " + errMsg;
+		if (!TextUtils.isEmpty(errDetail)) {
+			msg += "\n详细信息: " + errDetail;
+		}
+		if (!devMode) {
+			msg = "当前网络不稳定";
+			if (errCode == VerifyErr.C_NO_SIM.getCode()
+					|| errCode == VerifyErr.C_UNSUPPORTED_OPERATOR.getCode()
+					|| errCode == VerifyErr.C_CELLULAR_DISABLED.getCode()) {
+				msg = errMsg;
+			}
+		}
+		Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+		goResultActivity(null);
 	}
 
 	private void customizeUi() {
 		SecVerify.setUiSettings(CustomizeUtils.customizeUi());
 		SecVerify.setLandUiSettings(CustomizeUtils.customizeLandUi());
+	}
+
+
+	private void customizeUi1() {
+		SecVerify.setUiSettings(CustomizeUtils.customizeUi1());
+		SecVerify.setLandUiSettings(CustomizeUtils.customizeUi5(this));
+//		LandUiSettings uiSettings1  = new LandUiSettings.Builder()
+//				.setTranslateAnim(true)
+//				.setImmersiveTheme(true)
+//				.setImmersiveStatusTextColorBlack(true)
+//				.build();
+//		SecVerify.setLandUiSettings(uiSettings1);
+	}
+
+
+	private void customizeUi2() {
+		SecVerify.setUiSettings(CustomizeUtils.customizeUi2());
+		SecVerify.setLandUiSettings(null);
+//		LandUiSettings uiSettings1  = new LandUiSettings.Builder()
+//				.setDialogMaskBackgroundClickClose(true)
+//				.setStartActivityTransitionAnim(R.anim.sec_verify_translate_bottom_in,R.anim.sec_verify_translate_bottom_out)
+//				.setFinishActivityTransitionAnim(R.anim.sec_verify_translate_bottom_in,R.anim.sec_verify_translate_bottom_out)
+//				.setDialogTheme(true)
+//				.setDialogAlignBottom(true)
+//				.build();
+//		SecVerify.setLandUiSettings(uiSettings1);
+	}
+
+	private void customizeUi3() {
+		SecVerify.setUiSettings(CustomizeUtils.customizeUi3());
+		SecVerify.setLandUiSettings(null);
 	}
 
 	private void customizeUi4() {
@@ -490,13 +532,80 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		CustomUIRegister.addTitleBarCustomizedUi(views,new CustomViewClickCallback(1));
 	}
 
+	private void addCustomView1() {
+		CustomUIRegister.addCustomizedUi(CustomizeUtils.buildCustomView(this), new CustomViewClickListener() {
+			@Override
+			public void onClick(View view) {
+				int id = view.getId();
+				if (id == R.id.customized_btn_id_1) {
+					customizeUi3();
+					addCustomView3();
+					SecVerify.refreshOAuthPage();
+				}
+			}
+		});
+		View view = LayoutInflater.from(this).inflate(R.layout.sec_verify_demo_loading,null);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		params.addRule(RelativeLayout.CENTER_IN_PARENT);
+		view.setLayoutParams(params);
+		CustomUIRegister.setCustomizeLoadingView(view);
+
+	}
+
+	private void addCustomView2() {
+		CustomUIRegister.addCustomizedUi(CustomizeUtils.buildCustomView2(this), new CustomViewClickListener() {
+			@Override
+			public void onClick(View view) {
+				int id = view.getId();
+				String msg = "";
+				if (id == R.id.customized_btn_id_1) {
+					msg = "用户取消登录";
+					// 自定义控件点击时，SecVerify默认不关闭授权页面，若需关闭，可调用该方法
+					SecVerify.finishOAuthPage();
+					CommonProgressDialog.dismissProgressDialog();
+				} else if (id == R.id.customized_view_id) {
+					return;
+				}
+				// 关闭加载框
+				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	private void addCustomView3() {
+
+		CustomUIRegister.addCustomizedUi(CustomizeUtils.buildCustomView3(this), new CustomViewClickListener() {
+			@Override
+			public void onClick(View view) {
+				int id = view.getId();
+				String msg = "";
+				if (id == R.id.customized_btn_id_1) {
+					msg = "按钮1 clicked";
+					// 自定义控件点击时，SecVerify默认不关闭授权页面，若需关闭，可调用该方法
+					addCustomView1();
+					customizeUi2();
+					SecVerify.refreshOAuthPage();
+				} else if (id == R.id.customized_btn_id_0){
+					msg = "关闭返回 ";
+					SecVerify.finishOAuthPage();
+				} else if (id == R.id.customized_btn_id_3){
+					msg = "登录返回";
+					SecVerify.finishOAuthPage();
+				}
+				// 关闭加载框
+				CommonProgressDialog.dismissProgressDialog();
+				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
 	private void addCustomView4() {
 		CustomUIRegister.addCustomizedUi(CustomizeUtils.buildCustomView4(MobSDK.getContext()),
 				null);
 		CustomUIRegister.addTitleBarCustomizedUi(null,null);
 	}
 
-	private void gotoSuccessActivity(LoginResult data) {
+	private void goResultActivity(LoginResult data) {
 		Intent i = new Intent(this, ResultActivity.class);
 		if (data != null) {
 			i.putExtra("sec_verify_demo_verify_success", true);
@@ -520,6 +629,25 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			}
 		}
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (defaultUi == 1 || defaultUi == 3) {
+			//处理部分机型调起授权页面的Activity设置固定方向之后，授权页面无法横竖屏切换
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//根据需要设置为横屏或者竖屏
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (defaultUi == 1 || defaultUi == 3) {
+			//处理部分机型调起授权页面的Activity设置固定方向之后，授权页面无法横竖屏切换
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+		}
+	}
+
 
 	private void switchDevMode() {
 		if (devMode) {
@@ -578,7 +706,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		onCreate(null);
 	}
 
-	@Deprecated
 	private void showMobPrivacy() {
 
 		sharePrefrenceHelper = new SharePrefrenceHelper(MobSDK.getContext());
@@ -638,106 +765,5 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				Log.d(TAG, "隐私协议内容文本获取失败");
 			}
 		});
-	}
-
-	@Deprecated
-	private void addCustomView1() {
-		CustomUIRegister.addCustomizedUi(CustomizeUtils.buildCustomView(this), new CustomViewClickListener() {
-			@Override
-			public void onClick(View view) {
-				int id = view.getId();
-				if (id == R.id.customized_btn_id_1) {
-					customizeUi3();
-					addCustomView3();
-					SecVerify.refreshOAuthPage();
-				}
-			}
-		});
-		View view = LayoutInflater.from(this).inflate(R.layout.sec_verify_demo_loading,null);
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		params.addRule(RelativeLayout.CENTER_IN_PARENT);
-		view.setLayoutParams(params);
-		CustomUIRegister.setCustomizeLoadingView(view);
-
-	}
-
-	@Deprecated
-	private void addCustomView2() {
-		CustomUIRegister.addCustomizedUi(CustomizeUtils.buildCustomView2(this), new CustomViewClickListener() {
-			@Override
-			public void onClick(View view) {
-				int id = view.getId();
-				String msg = "";
-				if (id == R.id.customized_btn_id_1) {
-					msg = "用户取消登录";
-					// 自定义控件点击时，SecVerify默认不关闭授权页面，若需关闭，可调用该方法
-					SecVerify.finishOAuthPage();
-					CommonProgressDialog.dismissProgressDialog();
-				} else if (id == R.id.customized_view_id) {
-					return;
-				}
-				// 关闭加载框
-				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
-
-	@Deprecated
-	private void addCustomView3() {
-		CustomUIRegister.addCustomizedUi(CustomizeUtils.buildCustomView3(this), new CustomViewClickListener() {
-			@Override
-			public void onClick(View view) {
-				int id = view.getId();
-				String msg = "";
-				if (id == R.id.customized_btn_id_1) {
-					msg = "按钮1 clicked";
-					// 自定义控件点击时，SecVerify默认不关闭授权页面，若需关闭，可调用该方法
-					addCustomView1();
-					customizeUi2();
-					SecVerify.refreshOAuthPage();
-				} else if (id == R.id.customized_btn_id_0){
-					msg = "关闭返回 ";
-					SecVerify.finishOAuthPage();
-				} else if (id == R.id.customized_btn_id_3){
-					msg = "登录返回";
-					SecVerify.finishOAuthPage();
-				}
-				// 关闭加载框
-				CommonProgressDialog.dismissProgressDialog();
-				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
-
-@Deprecated
-	private void customizeUi1() {
-		SecVerify.setUiSettings(CustomizeUtils.customizeUi1());
-		SecVerify.setLandUiSettings(CustomizeUtils.customizeUi5(this));
-//		LandUiSettings uiSettings1  = new LandUiSettings.Builder()
-//				.setTranslateAnim(true)
-//				.setImmersiveTheme(true)
-//				.setImmersiveStatusTextColorBlack(true)
-//				.build();
-//		SecVerify.setLandUiSettings(uiSettings1);
-	}
-
-	@Deprecated
-	private void customizeUi2() {
-		SecVerify.setUiSettings(CustomizeUtils.customizeUi2());
-		SecVerify.setLandUiSettings(null);
-//		LandUiSettings uiSettings1  = new LandUiSettings.Builder()
-//				.setDialogMaskBackgroundClickClose(true)
-//				.setStartActivityTransitionAnim(R.anim.sec_verify_translate_bottom_in,R.anim.sec_verify_translate_bottom_out)
-//				.setFinishActivityTransitionAnim(R.anim.sec_verify_translate_bottom_in,R.anim.sec_verify_translate_bottom_out)
-//				.setDialogTheme(true)
-//				.setDialogAlignBottom(true)
-//				.build();
-//		SecVerify.setLandUiSettings(uiSettings1);
-	}
-
-	@Deprecated
-	private void customizeUi3() {
-		SecVerify.setUiSettings(CustomizeUtils.customizeUi3());
-		SecVerify.setLandUiSettings(null);
 	}
 }

@@ -12,7 +12,6 @@
         android:layout_width="@dimen/sec_verify_demo_common_100"
         android:layout_height="@dimen/sec_verify_demo_common_50"
         android:layout_marginLeft="@dimen/sec_verify_demo_common_10"
-        android:layout_toRightOf="@+id/sec_verify_demo_title_bar_left_iv"
         android:drawableLeft="@drawable/sec_verify_demo_back"
         android:gravity="center_vertical"
         android:text="@string/sec_verify_demo_back"
