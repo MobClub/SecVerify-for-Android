@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="secverify_uisetting" type="id"/>
+    <item name="secverify_adapter" type="id" />
+    <item name="secverify_callback1" type="id" />
+    <item name="secverify_callback2" type="id" />
+    <item name="secverify_callback3" type="id" />
+    <item name="secverify_event_test" type="id" />
+</resources>

@@ -7,6 +7,8 @@
 -keep class com.mob.**{*;}
 # for CTCC
 -keep class cn.com.chinatelecom.account.**{*;}
+#for xiaowo
+-keep class com.unicom.xiaowo.account.shield.**{*;}
 # for CUCC
 -keep class com.sdk.**{*;}
 # for CMCC

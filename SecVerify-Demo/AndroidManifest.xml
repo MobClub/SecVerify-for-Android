@@ -5,7 +5,7 @@
     android:versionCode="1"
     android:versionName="1.0.0">
 
-    <uses-sdk tools:overrideLibrary="pl.droidsonroids.gif,com.mob.secverify,com.sdk" />
+    <uses-sdk tools:overrideLibrary="com.unicom.xiaowo.account.shield,pl.droidsonroids.gif,com.mob.secverify,com.sdk" />
 
     <!--	移动运营商用于双卡手机切换，会更快，建议加上-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -17,14 +17,12 @@
         android:name="com.mob.MobApplication"
         android:icon="@drawable/ic_launcher"
         android:allowBackup="false"
-        tools:replace="android:allowBackup"
         android:label="@string/app_name"
         tools:overrideLibrary=""
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
@@ -50,6 +48,8 @@
             android:windowSoftInputMode="stateHidden|adjustResize"
             >
         </activity>
+        <activity android:name=".NoUITest"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>

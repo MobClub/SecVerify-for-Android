@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.telephony.TelephonyManager;
 
 import com.mob.MobSDK;
-import com.mob.secverify.log.VerifyLog;
 
 import java.lang.reflect.Method;
 
@@ -67,7 +66,6 @@ public class OperatorUtils {
 			ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			return (Boolean) method.invoke(connectivityManager);
 		} catch (Throwable t) {
-			VerifyLog.getInstance().d(t, VerifyLog.FORMAT, "isMobileDataEnabled", "Check mobile data encountered exception");
 			return false;
 		}
 	}

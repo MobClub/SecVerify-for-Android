@@ -10,14 +10,10 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mob.MobSDK;
-import com.mob.PrivacyPolicy;
 import com.mob.secverify.CustomUIRegister;
 import com.mob.secverify.CustomViewClickListener;
 import com.mob.secverify.GetTokenCallback;
@@ -38,17 +33,15 @@ import com.mob.secverify.PageCallback;
 import com.mob.secverify.PreVerifyCallback;
 import com.mob.secverify.SecVerify;
 import com.mob.secverify.UiLocationHelper;
+import com.mob.secverify.common.exception.VerifyException;
 import com.mob.secverify.datatype.VerifyResult;
 import com.mob.secverify.demo.entity.LoginResult;
 import com.mob.secverify.demo.exception.DemoException;
 import com.mob.secverify.demo.login.LoginTask;
 import com.mob.secverify.demo.ui.component.CommonProgressDialog;
-import com.mob.secverify.demo.ui.component.PrivacyDialog;
 import com.mob.secverify.demo.util.Const;
 import com.mob.secverify.demo.util.CustomizeUtils;
 import com.mob.secverify.exception.VerifyErr;
-import com.mob.secverify.exception.VerifyException;
-import com.mob.secverify.ui.AgreementPage;
 import com.mob.tools.utils.ResHelper;
 import com.mob.tools.utils.SharePrefrenceHelper;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -68,14 +61,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private Button verifyDialogBtn;
 	private TextView versionTv;
 	private TextView appNameTv;
-	private boolean devMode = false;
+	private TextView uiTest;
+	private boolean devMode = true;
 	private int defaultUi = 0;
-	private boolean isFirstTime = true;
 	private SharePrefrenceHelper sharePrefrenceHelper;
 	private boolean isVerifySupport = false;
 	private boolean isPreVerifyDone = true;
 	private long starttime;
-	String mobToken;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,11 +95,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //		showMobPrivacy();
 		showMobPrivacyDirect();
 		isVerifySupport = SecVerify.isVerifySupport();
-		if (isVerifySupport) {
-			preVerify();
-		} else {
-			Toast.makeText(this, "当前环境不支持", Toast.LENGTH_SHORT).show();
-		}
+		preVerify();
 	}
 
 	private void showMobPrivacyDirect() {
@@ -142,11 +130,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //				SecVerify.setAdapterFullName("com.mob.secverify.demo.ui.component.MyAdapter");
 				SecVerify.autoFinishOAuthPage(false);
 				isVerifySupport = SecVerify.isVerifySupport();
-				if (isVerifySupport) {
-					verify();
-				} else {
-					Toast.makeText(this, "当前环境不支持", Toast.LENGTH_SHORT).show();
-				}
+				verify();
 				break;
 			}
 			case R.id.sec_verify_demo_main_verify_dialog: {
@@ -159,15 +143,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //				SecVerify.setAdapterFullName("com.mob.secverify.demo.ui.component.DialogAdapter");
 				SecVerify.autoFinishOAuthPage(false);
 				isVerifySupport = SecVerify.isVerifySupport();
-				if (isVerifySupport) {
-					verify();
-				} else {
-					Toast.makeText(this, "当前环境不支持", Toast.LENGTH_SHORT).show();
-				}
+				verify();
 				break;
 			}
 			case R.id.sec_verify_demo_main_app_name: {
-				switchDevMode();
+				//switchDevMode();
 				break;
 			}
 			case R.id.sec_verify_demo_main_version: {
@@ -180,14 +160,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQUEST_CODE) {
-		}
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		// Demo为了演示效果，动态授权结束后做一次预登录
 	}
 
 	@Override
@@ -209,6 +186,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		logoIv.setOnClickListener(this);
 		appNameTv.setOnClickListener(this);
 		versionTv.setOnClickListener(this);
+
+		uiTest = findViewById(R.id.sec_verify_demo_main_app_name);
+		uiTest.setOnClickListener(new View.OnClickListener() {
+			final static int COUNTS = 5;
+			final static long DURATION = 3*1000;
+			long[] mHits = new long[COUNTS];
+			@Override
+			public void onClick(View v) {
+				System.arraycopy(mHits,1,mHits,0,mHits.length-1);
+				mHits[mHits.length-1] = SystemClock.uptimeMillis();
+				if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)){
+					Intent functest = new Intent();
+					functest.setClass(MainActivity.this,NoUITest.class);
+					startActivity(functest);
+				}
+			}
+		});
 	}
 
 	/* 检查使用权限 */
@@ -247,7 +241,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		SecVerify.setTimeOut(5000);
 		//移动的debug tag 是CMCC-SDK,电信是CT_ 联通是PriorityAsyncTask
 		SecVerify.setDebugMode(true);
-		SecVerify.setUseCache(true);
 		SecVerify.preVerify(new PreVerifyCallback() {
 			@Override
 			public void onComplete(Void data) {
@@ -706,64 +699,4 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		onCreate(null);
 	}
 
-	private void showMobPrivacy() {
-
-		sharePrefrenceHelper = new SharePrefrenceHelper(MobSDK.getContext());
-		sharePrefrenceHelper.open("privacy", 1);
-
-		if (sharePrefrenceHelper.getBoolean("isGrant")) {
-			return;
-		}
-
-		MobSDK.getPrivacyPolicyAsync(MobSDK.POLICY_TYPE_URL, new PrivacyPolicy.OnPolicyListener() {
-			@Override
-			public void onComplete(PrivacyPolicy data) {
-				if (data != null) {
-					// 富文本内容
-					final String url = data.getContent();
-					String content = MainActivity.this.getResources().getString(R.string.sec_verify_demo_privacy_text);
-					SpannableString spanStr = new SpannableString(content);
-//					spanStr.setSpan(new ForegroundColorSpan(baseColor), 0, agreement.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					String mobService = MainActivity.this.getResources().getString(R.string.sec_verify_demo_privacy_title);
-					int privacyIndex = content.indexOf(mobService);
-					spanStr.setSpan(new ForegroundColorSpan(Color.parseColor("#FE7A4E")), privacyIndex, privacyIndex + mobService.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					spanStr.setSpan(new ClickableSpan() {
-						@Override
-						public void updateDrawState(TextPaint ds) {
-							ds.setUnderlineText(false);
-						}
-
-						@Override
-						public void onClick(View widget) {
-							AgreementPage page = new AgreementPage();
-							Intent i = new Intent();
-							i.putExtra("extra_agreement_url", url);
-							page.show(MainActivity.this, i);
-						}
-					}, privacyIndex, privacyIndex + mobService.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-					PrivacyDialog.showPrivacyDialog(MainActivity.this, spanStr, new ResultListener() {
-						@Override
-						public void onComplete(Object data) {
-							submitPolicyGrantResult(true);
-							sharePrefrenceHelper.putBoolean("isGrant", true);
-						}
-
-						@Override
-						public void onFailure(DemoException e) {
-							submitPolicyGrantResult(false);
-							sharePrefrenceHelper.putBoolean("isGrant", true);
-						}
-					});
-
-				}
-			}
-
-			@Override
-			public void onFailure(Throwable t) {
-				Log.d(TAG, "隐私协议内容文本获取失败");
-			}
-		});
-	}
 }

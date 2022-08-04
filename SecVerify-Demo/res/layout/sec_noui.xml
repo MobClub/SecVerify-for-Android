@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="10"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试参数配置"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="配置超时时间" />
+
+                <EditText
+                    android:id="@+id/noui_timeout"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:hint="单位ms" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/login_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="一键登录后关闭授权页面" />
+
+            <Button
+                android:id="@+id/login_unfinish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="一键登录后保留授权页面" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/agree_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="同意隐私政策" />
+
+            <Button
+                android:id="@+id/reject_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="拒绝隐私政策" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_weight="1"
+                android:id="@id/secverify_uisetting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="通过UiSetting拉起授权页面" />
+
+            <Button
+                android:layout_weight="1"
+                android:id="@id/secverify_adapter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="通过Adapter拉起授权页面" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="接口测试"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ScrollView
+            android:id="@+id/scrowView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/stand_pre_test"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="预取号" />
+
+
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/secverify_callback1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="拉起授权页面接口一回调测试" />
+
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/secverify_callback2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="拉起授权页面接口二回调测试" />
+
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/secverify_callback3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="拉起授权页面接口三回调测试" />
+
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/secverify_event_test"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="授权页面点击事件回调测试" />
+
+                <Button
+                    android:id="@+id/sec_func_enable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="当前环境是否支持取号" />
+
+                <Button
+                    android:id="@+id/privacy_test"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="当前隐私协议结果" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_weight="8"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#380c2a">
+        <TextView
+            android:id="@+id/output"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="接口内容显示窗口"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </ScrollView>
+
+</LinearLayout>

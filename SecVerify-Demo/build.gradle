@@ -3,19 +3,19 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.mob.sdk'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.mob.secverify.demo"
         minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 30000
-        versionName "3.0.0"
-        ndk {
-            // 选择要添加的对应 cpu 类型的 .so 库。
-            abiFilters 'armeabi-v7a'
-            // 可指定的值为 'armeabi-v7a', 'arm64-v8a', 'armeabi', 'x86', 'x86_64'
-        }
+        targetSdkVersion 30
+        versionCode 30102
+        versionName "3.1.2"
+//        ndk {
+//            // 选择要添加的对应 cpu 类型的 .so 库。
+//            abiFilters 'armeabi-v7a'
+//            // 可指定的值为 'armeabi-v7a', 'arm64-v8a', 'armeabi', 'x86', 'x86_64'
+//        }
     }
 
     sourceSets {
@@ -29,8 +29,43 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+	signingConfigs {
+        release {
+            storeFile file("../ASProj-SecVerify/private.keystore")
+            storePassword "mob123"
+            keyAlias "private.keystore"
+            keyPassword "mob123"
+        }
+        debug {
+            storeFile file("../ASProj-SecVerify/private.keystore")
+            storePassword "mob123"
+            keyAlias "private.keystore"
+            keyPassword "mob123"
+        }
+    }
 
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            signingConfig signingConfigs.debug
+        }
+    }
 }
+
+// 请勿修改此块，统一打包功能会用到
+try {
+    String tmpParams = getProperty("custom_params")
+    String[] params = tmpParams.split(",")
+    params.each {item->
+        MobSDK[item] = true
+    }
+} catch(Throwable t) {}
 
 // 在MobSDK的扩展中注册SecVerify的相关信息
 MobSDK {
