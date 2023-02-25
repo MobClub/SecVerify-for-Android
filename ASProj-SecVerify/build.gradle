@@ -2,18 +2,19 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
         configurations.all {
             resolutionStrategy.cacheDynamicVersionsFor 1,'seconds'
         }
         maven {
-            url 'http://10.89.104.129:8080/job/iMaven/ws/android/'
-            //url "http://mvn.mob.com/android"
+            //url 'http://10.89.104.129:8080/job/iMaven/ws/android/'
+            allowInsecureProtocol = true
+            url "http://mvn.mob.com/android"
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.2'
+        classpath 'com.android.tools.build:gradle:7.4.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         // 注册MobSDK
@@ -23,11 +24,11 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
         maven {
-            url 'http://10.89.104.129:8080/job/iMaven/ws/android/'
-            //url "http://mvn.mob.com/android"
+//            url 'http://10.89.104.129:8080/job/iMaven/ws/android/'
+            url "http://mvn.mob.com/android"
         }
     }
 }

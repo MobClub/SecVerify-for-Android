@@ -1,14 +1,36 @@
+//buildscript {
+//    repositories {
+//        mavenCentral()
+//        google()
+//        configurations.all {
+//            resolutionStrategy.cacheDynamicVersionsFor 1,'seconds'
+//        }
+//        maven {
+//            //url 'http://10.89.104.129:8080/job/iMaven/ws/android/'
+//            allowInsecureProtocol = true
+//            url "http://mvn.mob.com/android"
+//        }
+//    }
+//    dependencies {
+//        classpath 'com.android.tools.build:gradle:3.5.2'
+//        // NOTE: Do not place your application dependencies here; they belong
+//        // in the individual module build.gradle files
+//        // 注册MobSDK
+//        classpath "com.mob.sdk:MobSDK:2018.0319.1724"
+//    }
+//}
+
 apply plugin: 'com.android.application'
 // 添加插件
 apply plugin: 'com.mob.sdk'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.mob.secverify.demo"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 30102
         versionName "3.1.2"
 //        ndk {
@@ -81,7 +103,7 @@ MobSDK {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
     implementation 'com.tencent.bugly:crashreport:3.2.1'
 }
