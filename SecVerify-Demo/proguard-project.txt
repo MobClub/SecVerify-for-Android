@@ -11,6 +11,8 @@
 -keep class com.unicom.xiaowo.account.shield.**{*;}
 # for CUCC
 -keep class com.sdk.**{*;}
+#for xiaowo
+#-keep class com.unicom.xiaowo.wo.account.shield.**{*;}
 # for CMCC
 -keep class com.cmic.sso.sdk.**{*;}
 # for demo

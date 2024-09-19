@@ -41,4 +41,17 @@ public class LoginTask {
 		}
 		HttpManager.getInstance().asyncPost(ServerConfig.getServerUrl() + URL_LOGIN, values, resultListener);
 	}
+
+//	public void loginForNoUI(com.mob.secverify.pure.entity.VerifyResult verifyResult, ResultListener<LoginResult> resultListener) {
+//		Map<String, Object> values = new HashMap<String, Object>();
+//		if (verifyResult != null) {
+//			values.put("opToken", verifyResult.getOpToken());
+//			values.put("operator", verifyResult.getOperator());
+//			values.put("phoneOperator", verifyResult.getOperator());
+//			values.put("token", verifyResult.getToken());
+//			values.put("md5", DeviceHelper.getInstance(MobSDK.getContext()).getSignMD5());
+//			values.put("appkey", MobSDK.getAppkey());
+//		}
+//		HttpManager.getInstance().asyncPost(ServerConfig.getServerUrl() + URL_LOGIN, values, resultListener);
+//	}
 }

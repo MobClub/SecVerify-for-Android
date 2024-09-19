@@ -2,6 +2,7 @@ package com.mob.secverify.demo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -10,7 +11,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.TextUtils;
@@ -51,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
-
+import com.mob.secverify.demo.util.PrivacyDialogUtils;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String TAG = "MainActivity";
@@ -60,12 +60,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private Button verifyBtn;
 	private Button verifyDialogBtn;
 	private TextView versionTv;
-	private TextView appNameTv;
-	private TextView uiTest;
-	private boolean devMode = true;
+	private boolean devMode = false;
 	private int defaultUi = 0;
 	private SharePrefrenceHelper sharePrefrenceHelper;
-	private boolean isVerifySupport = false;
 	private boolean isPreVerifyDone = true;
 	private long starttime;
 	@Override
@@ -90,29 +87,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}
 
 		initView();
-		checkPermissions();
+		PrivacyDialogUtils privacyDialogUtils = new PrivacyDialogUtils();
+		privacyDialogUtils.setDismissListener(new DialogInterface.OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				checkPermissions();
+				preVerify();
+			}
+		});
+
 		// 建议提早调用该接口进行预登录，这将极大地加快验证流程
-//		showMobPrivacy();
-		showMobPrivacyDirect();
-		isVerifySupport = SecVerify.isVerifySupport();
-		preVerify();
-	}
-
-	private void showMobPrivacyDirect() {
-		sharePrefrenceHelper = new SharePrefrenceHelper(MobSDK.getContext());
-		sharePrefrenceHelper.open("privacy", 1);
-
-		if (sharePrefrenceHelper.getBoolean("isGrant")) {
-			return;
+		//showMobPrivacy();
+		if(!privacyDialogUtils.showPrivacyDialogIfNeed(this, "秒验")){
+			checkPermissions();
+			preVerify();
 		}
 
-		submitPolicyGrantResult(true);
-		sharePrefrenceHelper.putBoolean("isGrant", true);
 	}
 
-	private void submitPolicyGrantResult(boolean grantResult) {
-		MobSDK.submitPolicyGrantResult(grantResult, null);
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -129,7 +121,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				customizeUi();
 //				SecVerify.setAdapterFullName("com.mob.secverify.demo.ui.component.MyAdapter");
 				SecVerify.autoFinishOAuthPage(false);
-				isVerifySupport = SecVerify.isVerifySupport();
 				verify();
 				break;
 			}
@@ -142,12 +133,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				customizeUi4();
 //				SecVerify.setAdapterFullName("com.mob.secverify.demo.ui.component.DialogAdapter");
 				SecVerify.autoFinishOAuthPage(false);
-				isVerifySupport = SecVerify.isVerifySupport();
 				verify();
-				break;
-			}
-			case R.id.sec_verify_demo_main_app_name: {
-				//switchDevMode();
 				break;
 			}
 			case R.id.sec_verify_demo_main_version: {
@@ -176,7 +162,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		logoIv = findViewById(R.id.sec_verify_demo_main_logo);
 		verifyBtn = findViewById(R.id.sec_verify_demo_main_verify_dialog);
 		verifyDialogBtn = findViewById(R.id.sec_verify_demo_main_verify);
-		appNameTv = findViewById(R.id.sec_verify_demo_main_app_name);
 		versionTv = findViewById(R.id.sec_verify_demo_main_version);
 		versionTv.setText(SecVerify.getVersion());
 
@@ -184,25 +169,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		verifyBtn.setOnClickListener(this);
 		verifyDialogBtn.setOnClickListener(this);
 		logoIv.setOnClickListener(this);
-		appNameTv.setOnClickListener(this);
 		versionTv.setOnClickListener(this);
-
-		uiTest = findViewById(R.id.sec_verify_demo_main_app_name);
-		uiTest.setOnClickListener(new View.OnClickListener() {
-			final static int COUNTS = 5;
-			final static long DURATION = 3*1000;
-			long[] mHits = new long[COUNTS];
-			@Override
-			public void onClick(View v) {
-				System.arraycopy(mHits,1,mHits,0,mHits.length-1);
-				mHits[mHits.length-1] = SystemClock.uptimeMillis();
-				if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)){
-					Intent functest = new Intent();
-					functest.setClass(MainActivity.this,NoUITest.class);
-					startActivity(functest);
-				}
-			}
-		});
 	}
 
 	/* 检查使用权限 */
@@ -360,7 +327,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				if (code != 6119140) {
 					CommonProgressDialog.dismissProgressDialog();
 					if (devMode) {
-					Toast.makeText(MainActivity.this, code + " " + desc, Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, code + " " + desc, Toast.LENGTH_SHORT).show();
 					}
 
 				}
@@ -410,7 +377,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 					if (t != null) {
 						errDetail = t.getMessage();
 					}
-
 					String msg = "获取授权码成功，应用服务器登录失败" + "\n错误码: " + errCode + "\n错误信息: " + errMsg;
 					if (!TextUtils.isEmpty(errDetail)) {
 						msg += "\n详细信息: " + errDetail;
@@ -698,5 +664,4 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		super.onConfigurationChanged(newConfig);
 		onCreate(null);
 	}
-
 }
